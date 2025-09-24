@@ -1,0 +1,802 @@
+/* Modern Temperature Analysis Styles with Purple Theme */
+.temperature-container {
+  padding: 2rem;
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  transition: all 0.3s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.temperature-container.dark-mode {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+}
+
+/* Animated Background Elements */
+.temperature-container::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+  animation: backgroundMove 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes backgroundMove {
+  0%, 100% { transform: rotate(0deg) translateX(0px) translateY(0px); }
+  33% { transform: rotate(120deg) translateX(20px) translateY(-10px); }
+  66% { transform: rotate(240deg) translateX(-20px) translateY(10px); }
+}
+
+/* Enhanced Header Section */
+.temperature-header {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 24px;
+  padding: 2.5rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.1);
+}
+
+.temperature-container.dark-mode .temperature-header {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.15) 0%, rgba(244, 114, 182, 0.15) 100%);
+  border-color: rgba(167, 139, 250, 0.3);
+  box-shadow: 0 20px 40px rgba(167, 139, 250, 0.2);
+}
+
+.header-content {
+  flex: 1;
+  min-width: 320px;
+}
+
+.temperature-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  margin: 0 0 0.8rem 0;
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.header-icon {
+  font-size: clamp(2rem, 4vw, 2.8rem) !important;
+  color: #8B5CF6;
+  filter: drop-shadow(0 4px 8px rgba(139, 92, 246, 0.3));
+}
+
+.temperature-container.dark-mode .header-icon {
+  color: #A78BFA;
+}
+
+.temperature-header p {
+  color: #64748b;
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.temperature-container.dark-mode .temperature-header p {
+  color: #cbd5e1;
+}
+
+.export-button {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 2.4rem;
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.export-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.export-button:hover::before {
+  left: 100%;
+}
+
+.export-button:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4);
+}
+
+/* Enhanced Controls Section */
+.temperature-controls {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 24px;
+  padding: 2.5rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.temperature-container.dark-mode .temperature-controls {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(167, 139, 250, 0.3);
+  box-shadow: 0 15px 35px rgba(167, 139, 250, 0.2);
+}
+
+.controls-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.control-group label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+}
+
+.temperature-container.dark-mode .control-group label {
+  color: #f8fafc;
+}
+
+.control-icon {
+  color: #8B5CF6 !important;
+  font-size: 1.4rem !important;
+  background: rgba(139, 92, 246, 0.1);
+  padding: 0.5rem;
+  border-radius: 10px;
+}
+
+.temperature-container.dark-mode .control-icon {
+  color: #A78BFA !important;
+  background: rgba(167, 139, 250, 0.1);
+}
+
+.control-group select {
+  padding: 1.2rem 3rem 1.2rem 1.5rem;
+  border: 2px solid rgba(139, 92, 246, 0.2);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1e293b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B5CF6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.2rem;
+}
+
+.temperature-container.dark-mode .control-group select {
+  background: rgba(51, 65, 85, 0.9);
+  border-color: rgba(167, 139, 250, 0.3);
+  color: #f8fafc;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.2rem;
+}
+
+.control-group select:focus {
+  outline: none;
+  border-color: #8B5CF6;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+  transform: translateY(-3px);
+}
+
+/* View Mode Toggle */
+.view-mode-selector {
+  display: flex;
+  background: rgba(139, 92, 246, 0.1);
+  padding: 0.8rem;
+  border-radius: 18px;
+  gap: 0.5rem;
+  backdrop-filter: blur(10px);
+  justify-content: center;
+  width: 100%;
+}
+
+.view-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  color: #64748b;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  position: relative;
+  flex: 1;
+  justify-content: center;
+  min-width: fit-content;
+}
+
+.view-mode-btn:hover {
+  background: rgba(139, 92, 246, 0.15);
+  color: #8B5CF6;
+  transform: translateY(-2px);
+}
+
+.view-mode-btn.active {
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  color: white;
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.3);
+}
+
+.temperature-container.dark-mode .view-mode-btn:hover {
+  color: #A78BFA;
+}
+
+/* Enhanced Stats Cards */
+.temperature-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 24px;
+  padding: 2.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.temperature-container.dark-mode .stat-card {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(167, 139, 250, 0.3);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  transform: scaleX(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 70%);
+  transform: scale(0);
+  transition: transform 0.4s ease;
+}
+
+.stat-card:hover::before {
+  transform: scaleX(1);
+}
+
+.stat-card:hover::after {
+  transform: scale(1);
+}
+
+.stat-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(139, 92, 246, 0.25);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-icon {
+  font-size: 3rem !important;
+  color: #8B5CF6;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+  padding: 1.2rem;
+  border-radius: 20px;
+  border: 2px solid rgba(139, 92, 246, 0.2);
+}
+
+.temperature-container.dark-mode .stat-icon {
+  color: #A78BFA;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(244, 114, 182, 0.1) 100%);
+  border-color: rgba(167, 139, 250, 0.3);
+}
+
+.stat-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #64748b;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.temperature-container.dark-mode .stat-title {
+  color: #cbd5e1;
+}
+
+.stat-value {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0 0 0.8rem 0;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.temperature-container.dark-mode .stat-value {
+  color: #f8fafc;
+}
+
+.stat-subtitle {
+  font-size: 1rem;
+  color: #8B5CF6;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.temperature-container.dark-mode .stat-subtitle {
+  color: #A78BFA;
+}
+
+/* Chart Container */
+.temperature-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.chart-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.1);
+  transition: all 0.3s ease;
+}
+
+.temperature-container.dark-mode .chart-container {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(167, 139, 250, 0.3);
+  box-shadow: 0 20px 40px rgba(167, 139, 250, 0.2);
+}
+
+.chart-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 30px 60px rgba(139, 92, 246, 0.15);
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(139, 92, 246, 0.1);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.temperature-container.dark-mode .chart-header {
+  border-bottom-color: rgba(167, 139, 250, 0.2);
+}
+
+.chart-title {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.02em;
+}
+
+.temperature-container.dark-mode .chart-title {
+  color: #f8fafc;
+}
+
+.chart-icon {
+  color: #8B5CF6 !important;
+  font-size: 1.8rem !important;
+  background: rgba(139, 92, 246, 0.1);
+  padding: 0.8rem;
+  border-radius: 15px;
+  border: 2px solid rgba(139, 92, 246, 0.2);
+}
+
+.temperature-container.dark-mode .chart-icon {
+  color: #A78BFA !important;
+  background: rgba(167, 139, 250, 0.1);
+  border-color: rgba(167, 139, 250, 0.3);
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 450px;
+  margin-top: 2rem;
+}
+
+/* Special styling for heatmap/iframe container */
+.chart-container:has(.temperature-map-iframe) .chart-wrapper {
+  height: 650px;
+}
+
+/* Temperature Map iframe Styling */
+.temperature-map-iframe {
+  border-radius: 20px;
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.2);
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  height: 100%;
+  min-height: 600px;
+}
+
+.temperature-container.dark-mode .temperature-map-iframe {
+  border-color: rgba(167, 139, 250, 0.4);
+  box-shadow: 0 15px 35px rgba(167, 139, 250, 0.3);
+  background: rgba(30, 41, 59, 0.95);
+}
+
+.temperature-map-iframe:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px rgba(139, 92, 246, 0.3);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.temperature-container.dark-mode .temperature-map-iframe:hover {
+  box-shadow: 0 25px 50px rgba(167, 139, 250, 0.4);
+  border-color: rgba(167, 139, 250, 0.6);
+}
+
+/* Data Info Panel */
+.data-info {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border-left: 5px solid #8B5CF6;
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-top: 2.5rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.temperature-container.dark-mode .data-info {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(244, 114, 182, 0.1) 100%);
+  border-left-color: #A78BFA;
+  border-color: rgba(167, 139, 250, 0.3);
+}
+
+.data-info h4 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.01em;
+}
+
+.temperature-container.dark-mode .data-info h4 {
+  color: #f8fafc;
+}
+
+.data-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.temperature-container.dark-mode .info-item {
+  background: rgba(51, 65, 85, 0.7);
+  border-color: rgba(167, 139, 250, 0.2);
+}
+
+.info-item:hover {
+  transform: translateY(-2px);
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.temperature-container.dark-mode .info-item:hover {
+  background: rgba(167, 139, 250, 0.1);
+}
+
+.info-label {
+  font-size: 1rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.temperature-container.dark-mode .info-label {
+  color: #cbd5e1;
+}
+
+.info-value {
+  font-weight: 800;
+  color: #8B5CF6;
+  font-size: 1.1rem;
+}
+
+.temperature-container.dark-mode .info-value {
+  color: #A78BFA;
+}
+
+/* Loading States */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 12px;
+}
+
+.temperature-container.dark-mode .loading-skeleton {
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .temperature-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-wrapper {
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .temperature-container {
+    padding: 1.5rem;
+  }
+  
+  .temperature-header {
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+  
+  .temperature-header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .export-button {
+    padding: 1rem 1.8rem;
+    font-size: 1rem;
+  }
+  
+  .temperature-controls {
+    padding: 2rem;
+    gap: 2rem;
+  }
+  
+  .controls-row {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .temperature-stats {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .chart-container {
+    padding: 2rem;
+  }
+  
+  .chart-wrapper {
+    height: 350px;
+  }
+  
+  /* Adjust iframe height for mobile */
+  .temperature-map-iframe {
+    min-height: 400px;
+    border-radius: 15px;
+  }
+  
+  .chart-container:has(.temperature-map-iframe) .chart-wrapper {
+    height: 450px;
+  }
+  
+  .data-info {
+    padding: 2rem;
+  }
+  
+  .data-info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .view-mode-selector {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .view-mode-btn {
+    flex: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .temperature-container {
+    padding: 1rem;
+  }
+  
+  .temperature-header {
+    padding: 1.5rem;
+    text-align: center;
+  }
+  
+  .header-content {
+    min-width: unset;
+  }
+  
+  .temperature-header h1 {
+    font-size: 1.8rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .temperature-controls {
+    padding: 1.5rem;
+  }
+  
+  .stat-card {
+    padding: 2rem;
+  }
+  
+  .chart-container {
+    padding: 1.5rem;
+  }
+  
+  .chart-title {
+    font-size: 1.4rem;
+  }
+  
+  .chart-wrapper {
+    height: 300px;
+  }
+  
+  /* Mobile iframe adjustments */
+  .temperature-map-iframe {
+    min-height: 350px;
+    border-radius: 12px;
+  }
+  
+  .chart-container:has(.temperature-map-iframe) .chart-wrapper {
+    height: 400px;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #7C3AED 0%, #DB2777 100%);
+}
+
+/* Focus Visible for Accessibility */
+.export-button:focus-visible,
+.view-mode-btn:focus-visible,
+.control-group select:focus-visible {
+  outline: 2px solid #8B5CF6;
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  .temperature-container {
+    background: white !important;
+    padding: 1rem;
+  }
+  
+  .export-button,
+  .temperature-controls {
+    display: none;
+  }
+  
+  .chart-container {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}
