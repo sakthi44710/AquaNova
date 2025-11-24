@@ -1,11 +1,19 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAuth } from '../../contexts/AuthContext';
 import './Navbar.css';
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
+  const { logout, currentUser } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const navItems = [
     { path: '/', label: 'Dashboard', icon: '📊' },
@@ -42,6 +50,20 @@ const Navbar = () => {
             title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
             <span className="theme-icon">{isDarkMode ? '☀️' : '🌙'}</span>
+          </button>
+        </li>
+        <li className="nav-item user-menu">
+          <div className="user-info">
+            <span className="user-icon">👤</span>
+            <span className="user-name">{currentUser?.name || 'User'}</span>
+          </div>
+          <button 
+            className="logout-btn"
+            onClick={handleLogout}
+            title="Logout"
+          >
+            <span className="logout-icon">🚪</span>
+            Logout
           </button>
         </li>
       </ul>

@@ -18,14 +18,29 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         // Check if user is logged in on mount
-        const token = localStorage.getItem('token');
-        const user = localStorage.getItem('user');
+        const checkAuth = async () => {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
 
-        if (token && user) {
-            setCurrentUser(JSON.parse(user));
-            setIsAuthenticated(true);
-        }
-        setLoading(false);
+            if (token && user) {
+                try {
+                    // Validate token by calling the /me endpoint
+                    await authAPI.getMe();
+                    setCurrentUser(JSON.parse(user));
+                    setIsAuthenticated(true);
+                } catch (error) {
+                    // Token is invalid or expired
+                    console.log('Token validation failed, clearing auth');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    setCurrentUser(null);
+                    setIsAuthenticated(false);
+                }
+            }
+            setLoading(false);
+        };
+
+        checkAuth();
     }, []);
 
     const signup = async (name, email, password) => {
