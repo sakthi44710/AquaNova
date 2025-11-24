@@ -101,6 +101,12 @@ const Login = () => {
                             />
                         </div>
 
+                        <div className="form-extras">
+                            <Link to="/forgot-password" className="forgot-link">
+                                Forgot Password?
+                            </Link>
+                        </div>
+
                         <button
                             type="submit"
                             className="auth-button"

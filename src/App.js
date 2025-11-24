@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import ForgotPassword from './components/Auth/ForgotPassword';
 import './App.css';
 
 // Import actual components
@@ -26,6 +27,7 @@ function App() {
             {/* Public routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
             {/* Protected routes */}
             <Route

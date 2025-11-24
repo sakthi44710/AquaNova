@@ -256,4 +256,120 @@ router.get('/me', authMiddleware, async (req, res) => {
     }
 });
 
+// @route   POST /api/auth/forgot-password
+// @desc    Send OTP for password reset
+// @access  Public
+router.post(
+    '/forgot-password',
+    [
+        body('email').isEmail().withMessage('Please enter a valid email')
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { email } = req.body;
+
+        try {
+            // Check if user exists
+            const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+
+            if (users.length === 0) {
+                return res.status(404).json({ message: 'No account found with this email' });
+            }
+
+            const user = users[0];
+
+            // Generate OTP
+            const otp = generateOTP();
+            const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+            // Delete any existing OTPs for this email
+            await db.query('DELETE FROM otp_verifications WHERE email = ?', [email]);
+
+            // Store OTP in database
+            await db.query(
+                'INSERT INTO otp_verifications (email, otp, expires_at) VALUES (?, ?, ?)',
+                [email, otp, expiresAt]
+            );
+
+            // Send OTP email
+            const emailResult = await sendOTPEmail(email, otp, user.name, 'Password Reset');
+
+            if (!emailResult.success) {
+                console.error('Email send failed:', emailResult.error);
+                return res.status(500).json({ message: 'Failed to send OTP email. Please try again.' });
+            }
+
+            res.json({ message: 'OTP sent successfully to your email' });
+        } catch (error) {
+            console.error('Forgot password error:', error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
+);
+
+// @route   POST /api/auth/reset-password
+// @desc    Reset password with OTP
+// @access  Public
+router.post(
+    '/reset-password',
+    [
+        body('email').isEmail().withMessage('Please enter a valid email'),
+        body('otp').isLength({ min: 6, max: 6 }).withMessage('OTP must be 6 digits'),
+        body('newPassword').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { email, otp, newPassword } = req.body;
+
+        try {
+            // Verify OTP
+            const [otpRecords] = await db.query(
+                'SELECT * FROM otp_verifications WHERE email = ? AND otp = ? ORDER BY created_at DESC LIMIT 1',
+                [email, otp]
+            );
+
+            if (otpRecords.length === 0) {
+                return res.status(400).json({ message: 'Invalid OTP' });
+            }
+
+            const otpRecord = otpRecords[0];
+
+            // Check if OTP is expired
+            if (new Date() > new Date(otpRecord.expires_at)) {
+                return res.status(400).json({ message: 'OTP has expired. Please request a new one.' });
+            }
+
+            // Check if user exists
+            const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+
+            if (users.length === 0) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Hash new password
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+            // Update password
+            await db.query('UPDATE users SET password = ? WHERE email = ?', [hashedPassword, email]);
+
+            // Delete used OTP
+            await db.query('DELETE FROM otp_verifications WHERE email = ?', [email]);
+
+            res.json({ message: 'Password reset successfully. Please login with your new password.' });
+        } catch (error) {
+            console.error('Reset password error:', error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
+);
+
 module.exports = router;
