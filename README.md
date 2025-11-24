@@ -1,18 +1,131 @@
-# Getting Started with Create React App
+# 🌊 AquaNova - Marine Data Intelligence Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![AquaNova](https://img.shields.io/badge/AquaNova-Marine%20Analytics-8B5CF6?style=for-the-badge)
+![React](https://img.shields.io/badge/React-19.1.1-61DAFB?style=for-the-badge&logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js)
 
-## Available Scripts
+A comprehensive ocean analytics platform for real-time marine data visualization, species tracking, and AI-powered insights for the Indian Ocean region.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## ✨ Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+🌡️ **Ocean Temperature** - Real-time data from Copernicus Marine  
+🐟 **Biodiversity** - 1,247+ species with eDNA analysis  
+🗺️ **Interactive Maps** - Leaflet-based visualization  
+🤖 **AI Assistant** - Google Gemini chatbot  
+⚠️ **Alert System** - Heatwaves, cyclones, warnings  
+📊 **Data Management** - 156+ active datasets  
+🔒 **Secure Auth** - JWT with OTP verification  
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Prerequisites
+- Node.js (v16 or higher)
+- MySQL / TiDB Database
+- Git
+
+### 2. Installation
+
+**Frontend**
+```bash
+# Install frontend dependencies
+npm install
+```
+
+**Backend**
+```bash
+# Go to backend folder
+cd backend
+
+# Install backend dependencies
+npm install
+```
+
+### 3. Configuration
+Create a `.env` file in the `backend` folder with your credentials:
+```env
+DB_HOST=your_host
+DB_PORT=4000
+DB_USER=your_user
+DB_PASSWORD=your_password
+DB_NAME=aquanova
+EMAIL_USER=your_email
+EMAIL_PASSWORD=your_app_password
+JWT_SECRET=your_secret_key
+```
+
+### 4. Database Setup
+Initialize the database tables:
+```bash
+# From the root directory
+node backend/setup-db.js
+```
+
+### 5. Running the App
+
+**Start Backend Server**
+```bash
+cd backend
+npm start
+# Server runs on http://localhost:5000
+```
+
+**Start Frontend**
+```bash
+# Open a new terminal in the root directory
+npm start
+# App opens at http://localhost:3000
+```
+
+## 📦 Deploy to Vercel
+
+```bash
+# Prepare for deployment
+.\prepare-deploy.ps1
+
+# Push to GitHub
+git push origin main
+
+# Deploy on Vercel
+# See DEPLOYMENT_GUIDE.md for details
+```
+
+**📖 Full Guide:** [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+
+---
+
+## 🔧 Environment Variables
+
+### Frontend
+```env
+REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_GOOGLE_AI_KEY=your_key
+```
+
+### Backend
+```env
+DB_HOST=your_host
+DB_USER=your_user
+DB_PASSWORD=your_password
+JWT_SECRET=your_secret
+EMAIL_USER=your_email
+```
+
+---
+
+## 📊 Tech Stack
+
+**Frontend:** React 19, Material UI, Chart.js, Leaflet  
+**Backend:** Node.js, Express, MySQL, JWT  
+**AI:** Google Gemini 1.5-flash  
+**Deploy:** Vercel, Railway
+
+---
+
+**Built with 💜 for ocean conservation**
 
 ### `npm test`
 

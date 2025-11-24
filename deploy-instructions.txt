@@ -1,0 +1,84 @@
+🚀 QUICK DEPLOYMENT GUIDE FOR AQUANOVA
+======================================
+
+STEP 1: PUSH TO GITHUB
+-----------------------
+cd "C:\Users\lenovo\Desktop\SIH Project\aquanova"
+git add .
+git commit -m "Ready for Vercel deployment"
+git push origin main
+
+
+STEP 2: DEPLOY FRONTEND (VERCEL)
+---------------------------------
+1. Go to https://vercel.com
+2. Click "Add New Project"
+3. Import "AquaNova" repository
+4. Settings:
+   - Framework: Create React App
+   - Build Command: npm run build
+   - Output Directory: build
+   - Install Command: npm install
+   
+5. Add Environment Variables:
+   REACT_APP_API_URL=https://your-backend.vercel.app/api
+   REACT_APP_GOOGLE_AI_KEY=your_google_ai_key
+   
+6. Click "Deploy"
+
+
+STEP 3: DEPLOY BACKEND (OPTION 1: RAILWAY - RECOMMENDED)
+---------------------------------------------------------
+1. Go to https://railway.app
+2. Sign up with GitHub
+3. Click "New Project" → "Deploy from GitHub repo"
+4. Create new repo for backend:
+   
+   mkdir "C:\Users\lenovo\Desktop\SIH Project\aquanova-backend"
+   cd "C:\Users\lenovo\Desktop\SIH Project\aquanova-backend"
+   Copy-Item "C:\Users\lenovo\Desktop\SIH Project\aquanova\backend\*" -Destination . -Recurse
+   git init
+   git add .
+   git commit -m "Backend for deployment"
+   git remote add origin https://github.com/sakthi44710/aquanova-backend.git
+   git push -u origin main
+
+5. Deploy on Railway
+6. Add environment variables:
+   DB_HOST=gateway01.ap-southeast-1.prod.aws.tidbcloud.com
+   DB_PORT=4000
+   DB_USER=2ZGMvSRghBi5aJw.root
+   DB_PASSWORD=c5RZNwi4h8GQ6NZk
+   DB_NAME=test
+   JWT_SECRET=<generate-random-secret>
+   EMAIL_USER=testingforproject07@gmail.com
+   EMAIL_PASSWORD=mrvxwiglfdwxcwkk
+   PORT=5000
+
+7. Get Railway URL (e.g., https://aquanova-backend.up.railway.app)
+
+
+STEP 4: UPDATE FRONTEND WITH BACKEND URL
+-----------------------------------------
+1. Go to Vercel → Your Frontend Project → Settings → Environment Variables
+2. Update REACT_APP_API_URL to your Railway URL + /api
+   Example: https://aquanova-backend.up.railway.app/api
+3. Redeploy frontend
+
+
+STEP 5: TEST DEPLOYMENT
+------------------------
+1. Visit your Vercel URL
+2. Test signup/login
+3. Test AI chatbot
+4. Check all features work
+
+
+IMPORTANT NOTES:
+----------------
+✅ Generate new JWT_SECRET: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+✅ Keep .env files secure (already in .gitignore)
+✅ TiDB Cloud allows external connections
+✅ Email service is configured with Gmail SMTP
+
+For detailed instructions, see DEPLOYMENT_GUIDE.md
