@@ -88,7 +88,7 @@ Remember: You're a knowledgeable friend, not a formal assistant. Make learning a
           'Authorization': `Bearer ${NVIDIA_API_KEY}`
         },
         body: JSON.stringify({
-          model: "nvidia/llama-3.1-nemotron-70b-instruct",
+          model: "nvidia/nemotron-nano-12b-v2-vl",
           messages: [
             {
               role: "system",
