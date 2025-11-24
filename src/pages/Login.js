@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import TOPOLOGY from 'vanta/dist/vanta.topology.min';
+import p5 from 'p5';
 import './Auth.css';
 
 const Login = () => {
@@ -14,6 +16,32 @@ const Login = () => {
     const [error, setError] = useState('');
     const [successMessage] = useState(location.state?.message || '');
     const [loading, setLoading] = useState(false);
+    const vantaRef = useRef(null);
+    const vantaEffect = useRef(null);
+
+    useEffect(() => {
+        if (!vantaEffect.current) {
+            vantaEffect.current = TOPOLOGY({
+                el: vantaRef.current,
+                p5: p5,
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 1.00,
+                color: 0xc2a0c2,
+                backgroundColor: 0x0a0a1a
+            });
+        }
+        return () => {
+            if (vantaEffect.current) {
+                vantaEffect.current.destroy();
+                vantaEffect.current = null;
+            }
+        };
+    }, []);
 
     const handleChange = (e) => {
         setFormData({
@@ -40,13 +68,7 @@ const Login = () => {
     };
 
     return (
-        <div className="auth-container">
-            <div className="auth-background">
-                <div className="wave wave1"></div>
-                <div className="wave wave2"></div>
-                <div className="wave wave3"></div>
-            </div>
-
+        <div className="auth-container" ref={vantaRef}>
             <div className="auth-content">
                 <div className="auth-card">
                     <div className="auth-header">

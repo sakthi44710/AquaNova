@@ -13,6 +13,7 @@ import {
   IconButton
 } from '@mui/material';
 import { Email, ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import axios from 'axios';
 
 const ForgotPassword = () => {
@@ -106,34 +107,80 @@ const ForgotPassword = () => {
     <Box
       sx={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        position: 'relative',
         display: 'flex',
         alignItems: 'center',
-        py: 4
+        justifyContent: 'center',
+        py: 4,
+        overflow: 'hidden',
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%)'
       }}
     >
-      <Container maxWidth="sm">
+      {/* Lottie Background */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 0,
+          opacity: 0.6,
+          pointerEvents: 'none',
+          '& > div': {
+            width: '100%',
+            height: '100%'
+          }
+        }}
+      >
+        <DotLottieReact
+          src="https://lottie.host/7b1b84ba-c9f2-41ae-9738-c0b720ba1d19/sXhbJe5JcI.lottie"
+          loop
+          autoplay
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      </Box>
+      
+      <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1 }}>
         <Paper
-          elevation={10}
+          elevation={0}
           sx={{
-            p: 4,
-            borderRadius: 3,
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)'
+            p: { xs: 3, sm: 4 },
+            borderRadius: '24px',
+            background: 'rgba(255, 255, 255, 0.97)',
+            backdropFilter: 'blur(30px)',
+            boxShadow: '0 25px 100px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)'
           }}
         >
           <Box sx={{ mb: 3 }}>
             <Button
               startIcon={<ArrowBack />}
               onClick={() => step === 1 ? navigate('/login') : setStep(1)}
-              sx={{ mb: 2, color: '#8B5CF6' }}
+              sx={{ 
+                mb: 2, 
+                color: '#8b5cf6',
+                fontWeight: 600,
+                '&:hover': {
+                  background: 'rgba(139, 92, 246, 0.08)'
+                }
+              }}
             >
               Back
             </Button>
-            <Typography variant="h4" gutterBottom sx={{ color: '#8B5CF6', fontWeight: 'bold' }}>
+            <Typography 
+              variant="h4" 
+              gutterBottom 
+              sx={{ 
+                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontWeight: 800,
+                fontSize: { xs: '1.5rem', sm: '1.75rem' }
+              }}
+            >
               🔒 Reset Password
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: '#64748b', fontWeight: 500 }}>
               {step === 1 ? 'Enter your email to receive an OTP' : 'Enter OTP and your new password'}
             </Typography>
           </Box>
@@ -182,10 +229,18 @@ const ForgotPassword = () => {
                 sx={{
                   mt: 3,
                   py: 1.5,
-                  background: 'linear-gradient(45deg, #8B5CF6 30%, #EC4899 90%)',
+                  borderRadius: '12px',
+                  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  textTransform: 'none',
+                  boxShadow: '0 8px 25px rgba(99, 102, 241, 0.35)',
                   '&:hover': {
-                    background: 'linear-gradient(45deg, #7C3AED 30%, #DB2777 90%)',
+                    background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%)',
+                    boxShadow: '0 12px 35px rgba(99, 102, 241, 0.45)',
+                    transform: 'translateY(-2px)'
                   },
+                  transition: 'all 0.3s ease'
                 }}
               >
                 {loading ? <CircularProgress size={24} color="inherit" /> : 'Send OTP'}
@@ -199,7 +254,12 @@ const ForgotPassword = () => {
                 value={formData.email}
                 disabled
                 margin="normal"
-                sx={{ mb: 2 }}
+                sx={{ 
+                  mb: 2,
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '12px',
+                  }
+                }}
               />
 
               <TextField
@@ -214,11 +274,12 @@ const ForgotPassword = () => {
                 placeholder="Enter 6-digit OTP"
                 sx={{
                   '& .MuiOutlinedInput-root': {
+                    borderRadius: '12px',
                     '&:hover fieldset': {
-                      borderColor: '#8B5CF6',
+                      borderColor: '#8b5cf6',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#8B5CF6',
+                      borderColor: '#8b5cf6',
                     },
                   },
                 }}
@@ -247,11 +308,12 @@ const ForgotPassword = () => {
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
+                    borderRadius: '12px',
                     '&:hover fieldset': {
-                      borderColor: '#8B5CF6',
+                      borderColor: '#8b5cf6',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#8B5CF6',
+                      borderColor: '#8b5cf6',
                     },
                   },
                 }}
@@ -280,11 +342,12 @@ const ForgotPassword = () => {
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
+                    borderRadius: '12px',
                     '&:hover fieldset': {
-                      borderColor: '#8B5CF6',
+                      borderColor: '#8b5cf6',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#8B5CF6',
+                      borderColor: '#8b5cf6',
                     },
                   },
                 }}
@@ -298,10 +361,18 @@ const ForgotPassword = () => {
                 sx={{
                   mt: 3,
                   py: 1.5,
-                  background: 'linear-gradient(45deg, #8B5CF6 30%, #EC4899 90%)',
+                  borderRadius: '12px',
+                  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  textTransform: 'none',
+                  boxShadow: '0 8px 25px rgba(99, 102, 241, 0.35)',
                   '&:hover': {
-                    background: 'linear-gradient(45deg, #7C3AED 30%, #DB2777 90%)',
+                    background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%)',
+                    boxShadow: '0 12px 35px rgba(99, 102, 241, 0.45)',
+                    transform: 'translateY(-2px)'
                   },
+                  transition: 'all 0.3s ease'
                 }}
               >
                 {loading ? <CircularProgress size={24} color="inherit" /> : 'Reset Password'}
@@ -312,7 +383,14 @@ const ForgotPassword = () => {
                 variant="text"
                 onClick={handleSendOTP}
                 disabled={loading}
-                sx={{ mt: 2, color: '#8B5CF6' }}
+                sx={{ 
+                  mt: 2, 
+                  color: '#8b5cf6',
+                  fontWeight: 600,
+                  '&:hover': {
+                    background: 'rgba(139, 92, 246, 0.08)'
+                  }
+                }}
               >
                 Resend OTP
               </Button>
