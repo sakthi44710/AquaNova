@@ -22,8 +22,8 @@ const AIChatbot = () => {
   const messagesEndRef = useRef(null);
 
   // NVIDIA API Configuration
-  const NVIDIA_API_KEY = "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";
-  const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
+  const NVIDIA_API_KEY = process.env.REACT_APP_NVIDIA_API_KEY;
+  const NVIDIA_API_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
 
   const quickQuestions = [
     { icon: <Thermostat />, text: "What's the ocean temperature like?", category: "temperature" },
