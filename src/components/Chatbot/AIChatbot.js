@@ -21,9 +21,8 @@ const AIChatbot = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // NVIDIA API Configuration
-  const NVIDIA_API_KEY = process.env.REACT_APP_NVIDIA_API_KEY;
-  const NVIDIA_API_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
+  // API Configuration
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const quickQuestions = [
     { icon: <Thermostat />, text: "What's the ocean temperature like?", category: "temperature" },
@@ -59,6 +58,8 @@ const AIChatbot = () => {
 
   const generateAIResponse = async (userMessage) => {
     try {
+      console.log('Calling backend NVIDIA proxy...');
+
       const systemPrompt = `You are AquaNova AI, a friendly and enthusiastic marine science buddy who loves the ocean! 🌊
 
 Talk like a supportive friend who's passionate about marine life. Use casual, conversational language while still being informative. You can use emojis occasionally to keep things fun and engaging!
@@ -80,15 +81,13 @@ Guidelines for your friendly style:
 
 Remember: You're a knowledgeable friend, not a formal assistant. Make learning about the ocean fun and engaging!`;
 
-      // Call NVIDIA API
-      const response = await fetch(NVIDIA_API_URL, {
+      // Call backend proxy to NVIDIA API
+      const response = await fetch(`${API_URL}/api/nvidia/chat`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${NVIDIA_API_KEY}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: "nvidia/nemotron-nano-12b-v2-vl",
           messages: [
             {
               role: "system",
@@ -101,13 +100,16 @@ Remember: You're a knowledgeable friend, not a formal assistant. Make learning a
           ],
           temperature: 0.8,
           max_tokens: 1024,
-          top_p: 0.9,
-          stream: false
+          top_p: 0.9
         })
       });
 
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
-        throw new Error(`NVIDIA API error: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Backend API error:', response.status, errorData);
+        throw new Error(`API error: ${response.status} - ${JSON.stringify(errorData)}`);
       }
 
       const data = await response.json();

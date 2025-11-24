@@ -15,6 +15,7 @@ require('./config/db');
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/chat', require('./routes/chat'));
+app.use('/api/nvidia', require('./routes/nvidia'));
 
 // Health check
 app.get('/api/health', (req, res) => {
