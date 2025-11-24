@@ -14,7 +14,6 @@ import {
   Refresh
 } from '@mui/icons-material';
 import './AIChatbot.css';
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const AIChatbot = () => {
   const [messages, setMessages] = useState([]);
@@ -22,10 +21,9 @@ const AIChatbot = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Initialize Google Generative AI
-  const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GOOGLE_AI_KEY);
-  // Use gemini-1.5-flash for faster, cost-effective responses
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  // NVIDIA API Configuration
+  const NVIDIA_API_KEY = "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";
+  const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 
   const quickQuestions = [
     { icon: <Thermostat />, text: "What's the current sea temperature?", category: "temperature" },
@@ -194,29 +192,54 @@ const AIChatbot = () => {
 
   const generateAIResponse = async (userMessage) => {
     try {
-      const prompt = `
-        You are AquaNova AI, a specialized marine data assistant for the Indian Ocean region.
-        You have access to comprehensive oceanographic data, species information, temperature trends, and real-time alerts.
-        
-        Your knowledge base includes:
-        - Current sea surface temperatures (Arabian Sea: ~28.5°C, Bay of Bengal: ~31.2°C)
-        - Marine species (Hilsa, Tuna, Green Sea Turtles)
-        - Alerts (Marine Heatwaves, Cyclones)
-        - Datasets (156 active datasets from Copernicus Marine/INCOIS)
-        
-        User Question: "${userMessage}"
-        
-        Provide a helpful, professional, and concise response. Use formatting like **bold** for key terms and bullet points for lists.
-        If the question is about specific data you don't have real-time access to, explain what data is typically available in the platform.
-        Always maintain the persona of a helpful marine scientist.
-      `;
+      const systemPrompt = `You are AquaNova AI, a specialized marine data assistant for the Indian Ocean region.
+You have access to comprehensive oceanographic data, species information, temperature trends, and real-time alerts.
 
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
+Your knowledge base includes:
+- Current sea surface temperatures (Arabian Sea: ~28.5°C, Bay of Bengal: ~31.2°C)
+- Marine species (Hilsa, Tuna, Green Sea Turtles)
+- Alerts (Marine Heatwaves, Cyclones)
+- Datasets (156 active datasets from Copernicus Marine/INCOIS)
+
+Provide helpful, professional, and concise responses. Use formatting like **bold** for key terms and bullet points for lists.
+If the question is about specific data you don't have real-time access to, explain what data is typically available in the platform.
+Always maintain the persona of a helpful marine scientist.`;
+
+      // Call NVIDIA API
+      const response = await fetch(NVIDIA_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${NVIDIA_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "nvidia/llama-3.1-nemotron-70b-instruct",
+          messages: [
+            {
+              role: "system",
+              content: systemPrompt
+            },
+            {
+              role: "user",
+              content: userMessage
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 1024,
+          top_p: 1,
+          stream: false
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`NVIDIA API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const aiMessage = data.choices[0].message.content;
 
       return {
-        content: text,
+        content: aiMessage,
         suggestions: ["Current sea temperature", "Active alerts", "Available datasets", "Species information"]
       };
     } catch (error) {
@@ -298,7 +321,7 @@ const AIChatbot = () => {
           </div>
           <div className="ai-details">
             <h2>AquaNova AI Assistant</h2>
-            <p className="ai-status">🟢 Online - Trained on Marine Data</p>
+            <p className="ai-status">🟢 Online - Powered by NVIDIA Llama 3.1 Nemotron</p>
           </div>
         </div>
         <div className="header-actions">
