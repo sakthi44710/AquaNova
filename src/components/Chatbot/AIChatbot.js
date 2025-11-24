@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Send, 
+import {
+  Send,
   Psychology,
   AutoAwesome,
   TrendingUp,
@@ -14,6 +14,7 @@ import {
   Refresh
 } from '@mui/icons-material';
 import './AIChatbot.css';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const AIChatbot = () => {
   const [messages, setMessages] = useState([]);
@@ -21,7 +22,21 @@ const AIChatbot = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Marine data knowledge base for AI responses
+  // Initialize Google Generative AI
+  const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GOOGLE_AI_KEY);
+  // Use gemini-1.5-flash for faster, cost-effective responses
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  const quickQuestions = [
+    { icon: <Thermostat />, text: "What's the current sea temperature?", category: "temperature" },
+    { icon: <Pets />, text: "Tell me about Hilsa fish migration", category: "species" },
+    { icon: <Warning />, text: "Any active marine alerts?", category: "alerts" },
+    { icon: <DataUsage />, text: "What datasets are available?", category: "datasets" },
+    { icon: <TrendingUp />, text: "Show temperature trends", category: "temperature" },
+    { icon: <MapIcon />, text: "Explain fish migration patterns", category: "migration" }
+  ];
+
+  // Marine data knowledge base for fallback responses
   const marineKnowledgeBase = {
     temperature: {
       current: "Current sea surface temperatures in the Indian Ocean range from 28.5°C in the Arabian Sea to 31.2°C in the Bay of Bengal.",
@@ -50,15 +65,6 @@ const AIChatbot = () => {
     }
   };
 
-  const quickQuestions = [
-    { icon: <Thermostat />, text: "What's the current sea temperature?", category: "temperature" },
-    { icon: <Pets />, text: "Tell me about Hilsa fish migration", category: "species" },
-    { icon: <Warning />, text: "Any active marine alerts?", category: "alerts" },
-    { icon: <DataUsage />, text: "What datasets are available?", category: "datasets" },
-    { icon: <TrendingUp />, text: "Show temperature trends", category: "temperature" },
-    { icon: <MapIcon />, text: "Explain fish migration patterns", category: "migration" }
-  ];
-
   useEffect(() => {
     // Initial welcome message
     setMessages([
@@ -70,7 +76,7 @@ const AIChatbot = () => {
         suggestions: ["Current sea temperature", "Active alerts", "Species information", "Available datasets"]
       }
     ]);
-    
+
     scrollToBottom();
   }, []);
 
@@ -82,24 +88,24 @@ const AIChatbot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const generateAIResponse = (userMessage) => {
+  const getFallbackResponse = (userMessage) => {
     const message = userMessage.toLowerCase();
-    
+
     // Temperature queries
     if (message.includes('temperature') || message.includes('temp') || message.includes('hot') || message.includes('warm')) {
       if (message.includes('current') || message.includes('now') || message.includes('today')) {
         return {
-          content: `🌡️ **Current Sea Surface Temperatures:**\n\n${marineKnowledgeBase.temperature.current}\n\nThe Arabian Sea is experiencing elevated temperatures, with a marine heatwave alert currently active. Bay of Bengal temperatures are also above normal seasonal averages.`,
+          content: `🌡️ **Current Sea Surface Temperatures (Offline Mode):**\n\n${marineKnowledgeBase.temperature.current}\n\nThe Arabian Sea is experiencing elevated temperatures, with a marine heatwave alert currently active. Bay of Bengal temperatures are also above normal seasonal averages.`,
           suggestions: ["Temperature trends", "Heatwave impacts", "View temperature map"]
         };
       } else if (message.includes('trend') || message.includes('change') || message.includes('rising')) {
         return {
-          content: `📈 **Temperature Trends:**\n\n${marineKnowledgeBase.temperature.trends}\n\n${marineKnowledgeBase.temperature.impacts}\n\nThis warming trend is particularly pronounced in the Arabian Sea and northern Bay of Bengal regions.`,
+          content: `📈 **Temperature Trends (Offline Mode):**\n\n${marineKnowledgeBase.temperature.trends}\n\n${marineKnowledgeBase.temperature.impacts}\n\nThis warming trend is particularly pronounced in the Arabian Sea and northern Bay of Bengal regions.`,
           suggestions: ["Current temperature", "Climate impacts", "View temperature charts"]
         };
       }
       return {
-        content: `🌡️ **Temperature Information:**\n\n${marineKnowledgeBase.temperature.current}\n\n**Long-term Trends:**\n${marineKnowledgeBase.temperature.trends}`,
+        content: `🌡️ **Temperature Information (Offline Mode):**\n\n${marineKnowledgeBase.temperature.current}\n\n**Long-term Trends:**\n${marineKnowledgeBase.temperature.trends}`,
         suggestions: ["View temperature map", "Heatwave alerts", "Climate impacts"]
       };
     }
@@ -136,7 +142,7 @@ const AIChatbot = () => {
     // Alert queries
     if (message.includes('alert') || message.includes('warning') || message.includes('hazard') || message.includes('danger')) {
       return {
-        content: `⚠️ **Current Marine Alerts:**\n\n${marineKnowledgeBase.alerts.current}\n\n**Active Alerts:**\n🔥 Marine Heatwave - Arabian Sea (High Severity)\n🌀 Cyclone Formation - Bay of Bengal (Extreme Severity)\n💨 High Wind Advisory - Kerala Coast (Moderate Severity)\n\n**Recommendations:** Vessels should monitor conditions closely and follow safety protocols.`,
+        content: `⚠️ **Current Marine Alerts (Offline Mode):**\n\n${marineKnowledgeBase.alerts.current}\n\n**Active Alerts:**\n🔥 Marine Heatwave - Arabian Sea (High Severity)\n🌀 Cyclone Formation - Bay of Bengal (Extreme Severity)\n💨 High Wind Advisory - Kerala Coast (Moderate Severity)\n\n**Recommendations:** Vessels should monitor conditions closely and follow safety protocols.`,
         suggestions: ["View alert map", "Safety guidelines", "Weather forecast", "Subscribe to alerts"]
       };
     }
@@ -174,7 +180,7 @@ const AIChatbot = () => {
     // General help or unclear queries
     if (message.includes('help') || message.includes('what can you do') || message.includes('features')) {
       return {
-        content: `🤖 **AquaNova AI Capabilities:**\n\nI can help you with:\n\n🌡️ **Temperature Analysis** - Current conditions, trends, heatwaves\n🐟 **Marine Species** - Information, migration patterns, eDNA data\n⚠️ **Environmental Alerts** - Heatwaves, cyclones, hazard warnings\n📊 **Datasets** - Available data, download options, formats\n🗺️ **Mapping** - Interactive visualizations, migration routes\n📈 **Trends** - Climate patterns, species populations, water quality\n\nJust ask me anything about marine data for the Indian Ocean region!`,
+        content: `🤖 **AquaNova AI Capabilities (Offline Mode):**\n\nI can help you with:\n\n🌡️ **Temperature Analysis** - Current conditions, trends, heatwaves\n🐟 **Marine Species** - Information, migration patterns, eDNA data\n⚠️ **Environmental Alerts** - Heatwaves, cyclones, hazard warnings\n📊 **Datasets** - Available data, download options, formats\n🗺️ **Mapping** - Interactive visualizations, migration routes\n📈 **Trends** - Climate patterns, species populations, water quality\n\nJust ask me anything about marine data for the Indian Ocean region!`,
         suggestions: ["Current sea temperature", "Active alerts", "Available datasets", "Species migration"]
       };
     }
@@ -184,6 +190,41 @@ const AIChatbot = () => {
       content: `🌊 I understand you're asking about "${userMessage}". While I have comprehensive marine data for the Indian Ocean region, I might need more specific information to help you better.\n\nI can provide detailed information about:\n• Sea surface temperatures and climate\n• Marine species and biodiversity\n• Fish migration patterns\n• Environmental alerts and hazards\n• Available oceanographic datasets\n\nCould you please rephrase your question or choose from the suggestions below?`,
       suggestions: ["Current temperature", "Marine species info", "Active alerts", "Available datasets"]
     };
+  };
+
+  const generateAIResponse = async (userMessage) => {
+    try {
+      const prompt = `
+        You are AquaNova AI, a specialized marine data assistant for the Indian Ocean region.
+        You have access to comprehensive oceanographic data, species information, temperature trends, and real-time alerts.
+        
+        Your knowledge base includes:
+        - Current sea surface temperatures (Arabian Sea: ~28.5°C, Bay of Bengal: ~31.2°C)
+        - Marine species (Hilsa, Tuna, Green Sea Turtles)
+        - Alerts (Marine Heatwaves, Cyclones)
+        - Datasets (156 active datasets from Copernicus Marine/INCOIS)
+        
+        User Question: "${userMessage}"
+        
+        Provide a helpful, professional, and concise response. Use formatting like **bold** for key terms and bullet points for lists.
+        If the question is about specific data you don't have real-time access to, explain what data is typically available in the platform.
+        Always maintain the persona of a helpful marine scientist.
+      `;
+
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+
+      return {
+        content: text,
+        suggestions: ["Current sea temperature", "Active alerts", "Available datasets", "Species information"]
+      };
+    } catch (error) {
+      console.error("Error generating AI response:", error);
+      // Fallback to local knowledge base
+      console.log("Falling back to local knowledge base...");
+      return getFallbackResponse(userMessage);
+    }
   };
 
   const handleSendMessage = async () => {
@@ -200,9 +241,9 @@ const AIChatbot = () => {
     setInputMessage('');
     setIsTyping(true);
 
-    // Simulate AI processing delay
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(inputMessage);
+    // Call Google AI
+    try {
+      const aiResponse = await generateAIResponse(inputMessage);
       const botMessage = {
         id: Date.now() + 1,
         type: 'bot',
@@ -212,8 +253,11 @@ const AIChatbot = () => {
       };
 
       setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Error in chat:", error);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const handleQuickQuestion = (question) => {
@@ -332,7 +376,7 @@ const AIChatbot = () => {
               </div>
             </div>
           ))}
-          
+
           {isTyping && (
             <div className="message bot">
               <div className="message-avatar">
@@ -349,7 +393,7 @@ const AIChatbot = () => {
               </div>
             </div>
           )}
-          
+
           <div ref={messagesEndRef} />
         </div>
       </div>
