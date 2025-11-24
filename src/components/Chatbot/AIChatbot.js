@@ -26,12 +26,12 @@ const AIChatbot = () => {
   const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 
   const quickQuestions = [
-    { icon: <Thermostat />, text: "What's the current sea temperature?", category: "temperature" },
-    { icon: <Pets />, text: "Tell me about Hilsa fish migration", category: "species" },
-    { icon: <Warning />, text: "Any active marine alerts?", category: "alerts" },
-    { icon: <DataUsage />, text: "What datasets are available?", category: "datasets" },
-    { icon: <TrendingUp />, text: "Show temperature trends", category: "temperature" },
-    { icon: <MapIcon />, text: "Explain fish migration patterns", category: "migration" }
+    { icon: <Thermostat />, text: "What's the ocean temperature like?", category: "temperature" },
+    { icon: <Pets />, text: "Tell me about Hilsa fish!", category: "species" },
+    { icon: <Warning />, text: "Any ocean alerts I should know?", category: "alerts" },
+    { icon: <DataUsage />, text: "What cool data do you have?", category: "datasets" },
+    { icon: <TrendingUp />, text: "How's the temperature changing?", category: "temperature" },
+    { icon: <MapIcon />, text: "How do fish migrate?", category: "migration" }
   ];
 
   // Marine data knowledge base for fallback responses
@@ -69,9 +69,9 @@ const AIChatbot = () => {
       {
         id: 1,
         type: 'bot',
-        content: "🌊 Hello! I'm AquaNova AI, your marine data assistant. I have access to comprehensive oceanographic data, species information, temperature trends, and real-time alerts for the Indian Ocean region. How can I help you today?",
+        content: "Hey there, ocean explorer! 🌊 I'm AquaNova AI, your friendly marine science buddy! I absolutely love talking about everything ocean-related - from cool fish species to ocean temperatures and marine alerts!\n\nI've got tons of data about the Indian Ocean, and I'm super excited to share it with you. What would you like to know about our amazing oceans today? 😊",
         timestamp: new Date(),
-        suggestions: ["Current sea temperature", "Active alerts", "Species information", "Available datasets"]
+        suggestions: ["What's the ocean temp like?", "Tell me about cool fish!", "Any ocean alerts?", "What data do you have?"]
       }
     ]);
 
@@ -192,18 +192,26 @@ const AIChatbot = () => {
 
   const generateAIResponse = async (userMessage) => {
     try {
-      const systemPrompt = `You are AquaNova AI, a specialized marine data assistant for the Indian Ocean region.
-You have access to comprehensive oceanographic data, species information, temperature trends, and real-time alerts.
+      const systemPrompt = `You are AquaNova AI, a friendly and enthusiastic marine science buddy who loves the ocean! 🌊
 
-Your knowledge base includes:
-- Current sea surface temperatures (Arabian Sea: ~28.5°C, Bay of Bengal: ~31.2°C)
-- Marine species (Hilsa, Tuna, Green Sea Turtles)
-- Alerts (Marine Heatwaves, Cyclones)
-- Datasets (156 active datasets from Copernicus Marine/INCOIS)
+Talk like a supportive friend who's passionate about marine life. Use casual, conversational language while still being informative. You can use emojis occasionally to keep things fun and engaging!
 
-Provide helpful, professional, and concise responses. Use formatting like **bold** for key terms and bullet points for lists.
-If the question is about specific data you don't have real-time access to, explain what data is typically available in the platform.
-Always maintain the persona of a helpful marine scientist.`;
+Your knowledge includes:
+- Ocean temperatures (Arabian Sea: ~28.5°C, Bay of Bengal: ~31.2°C)
+- Cool marine creatures (Hilsa, Tuna, Sea Turtles, and more!)
+- Marine alerts (heatwaves, cyclones, etc.)
+- Oceanographic datasets and trends
+
+Guidelines for your friendly style:
+- Be warm, approachable, and excited to help
+- Use phrases like "Hey!", "That's awesome!", "Let me tell you about...", "You're gonna love this!"
+- Share facts with enthusiasm, not like a textbook
+- Use emojis naturally (🐟🌊🐢🦈) when appropriate
+- If you don't know something, be honest but positive: "That's a great question! Let me tell you what I do know..."
+- Keep responses conversational but still informative
+- Encourage curiosity about the ocean
+
+Remember: You're a knowledgeable friend, not a formal assistant. Make learning about the ocean fun and engaging!`;
 
       // Call NVIDIA API
       const response = await fetch(NVIDIA_API_URL, {
@@ -224,9 +232,9 @@ Always maintain the persona of a helpful marine scientist.`;
               content: userMessage
             }
           ],
-          temperature: 0.7,
+          temperature: 0.8,
           max_tokens: 1024,
-          top_p: 1,
+          top_p: 0.9,
           stream: false
         })
       });
@@ -298,9 +306,9 @@ Always maintain the persona of a helpful marine scientist.`;
       {
         id: 1,
         type: 'bot',
-        content: "🌊 Chat cleared! I'm ready to help you with marine data questions. What would you like to know?",
+        content: "🌊 Chat cleared! No worries though - I'm still here and ready to chat about all things ocean! What's on your mind? 😊",
         timestamp: new Date(),
-        suggestions: ["Current sea temperature", "Active alerts", "Species information", "Available datasets"]
+        suggestions: ["Ocean temperatures?", "Cool marine species!", "Any alerts?", "Show me data!"]
       }
     ]);
   };
@@ -320,8 +328,8 @@ Always maintain the persona of a helpful marine scientist.`;
             <Psychology className="ai-icon" />
           </div>
           <div className="ai-details">
-            <h2>AquaNova AI Assistant</h2>
-            <p className="ai-status">🟢 Online - Powered by NVIDIA Llama 3.1 Nemotron</p>
+            <h2>AquaNova AI - Your Ocean Buddy 🌊</h2>
+            <p className="ai-status">🟢 Online & Ready to Chat!</p>
           </div>
         </div>
         <div className="header-actions">
@@ -442,7 +450,7 @@ Always maintain the persona of a helpful marine scientist.`;
         </div>
         <div className="input-help">
           <Help className="help-icon" />
-          <span>Try asking: "What's the current sea temperature?" or "Any active marine alerts?"</span>
+          <span>Ask me anything about the ocean! I'm here to help and have fun chatting! 🐟</span>
         </div>
       </div>
     </div>
