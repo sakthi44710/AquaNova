@@ -1,21 +1,22 @@
-/* Modern Biodiversity Module Styles with Purple Theme */
+/* ===== Biodiversity Module - AquaNova Ocean Theme ===== */
 .biodiversity-module {
-  padding: 2rem;
-  min-height: calc(100vh - 80px);
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  transition: all 0.3s ease;
+  padding: var(--content-padding);
+  min-height: calc(100vh - var(--nav-height));
+  background: var(--bg-primary);
+  transition: all var(--transition-slow);
 }
 
 .biodiversity-module.dark {
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  background: var(--gradient-dark);
 }
 
 /* Enhanced Header Section */
 .biodiversity-header {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  border-radius: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
   padding: 2rem;
   margin-bottom: 2rem;
   display: flex;
@@ -23,11 +24,13 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 1.5rem;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.5s ease-out;
 }
 
 .biodiversity-module.dark .biodiversity-header {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.15) 0%, rgba(244, 114, 182, 0.15) 100%);
-  border-color: rgba(167, 139, 250, 0.3);
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(14, 165, 233, 0.3);
 }
 
 .header-content {
@@ -39,10 +42,10 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 800;
   margin: 0 0 0.5rem 0;
-  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  background: var(--gradient-ocean);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -50,18 +53,19 @@
 
 .header-icon {
   font-size: 2.5rem !important;
-  color: #8B5CF6;
+  color: var(--primary-500);
+  filter: drop-shadow(0 2px 8px rgba(14, 165, 233, 0.3));
 }
 
 .biodiversity-module.dark .header-icon {
-  color: #A78BFA;
+  color: var(--primary-400);
 }
 
 .header-content p {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 1.1rem;
   margin: 0;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .biodiversity-module.dark .header-content p {
@@ -76,9 +80,9 @@
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--bg-secondary);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 1.5rem;
   display: flex;

@@ -1,45 +1,20 @@
-/* Modern Temperature Analysis Styles with Purple Theme */
+/* Modern Temperature Analysis Styles - AquaNova Professional Theme */
 .temperature-container {
-  padding: 2rem;
-  min-height: calc(100vh - 80px);
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  transition: all 0.3s ease;
+  padding: var(--content-padding);
+  min-height: calc(100vh - var(--nav-height));
+  transition: all var(--transition-slow);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   position: relative;
   overflow-x: hidden;
 }
 
-.temperature-container.dark-mode {
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
-}
-
-/* Animated Background Elements */
-.temperature-container::before {
-  content: '';
-  position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
-  animation: backgroundMove 20s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-
-@keyframes backgroundMove {
-  0%, 100% { transform: rotate(0deg) translateX(0px) translateY(0px); }
-  33% { transform: rotate(120deg) translateX(20px) translateY(-10px); }
-  66% { transform: rotate(240deg) translateX(-20px) translateY(10px); }
-}
-
 /* Enhanced Header Section */
 .temperature-header {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+  background: var(--gradient-glass);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  border-radius: 24px;
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
   padding: 2.5rem;
   margin-bottom: 2.5rem;
   display: flex;
@@ -49,13 +24,14 @@
   gap: 2rem;
   position: relative;
   z-index: 1;
-  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.1);
+  box-shadow: var(--shadow-xl);
+  animation: slideUp 0.5s ease-out;
 }
 
-.temperature-container.dark-mode .temperature-header {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.15) 0%, rgba(244, 114, 182, 0.15) 100%);
-  border-color: rgba(167, 139, 250, 0.3);
-  box-shadow: 0 20px 40px rgba(167, 139, 250, 0.2);
+.dark-mode .temperature-header {
+  background: var(--gradient-glass);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
 }
 
 .header-content {
@@ -70,33 +46,35 @@
   font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 800;
   margin: 0 0 0.8rem 0;
-  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: -0.02em;
 }
 
-.header-icon {
-  font-size: clamp(2rem, 4vw, 2.8rem) !important;
-  color: #8B5CF6;
-  filter: drop-shadow(0 4px 8px rgba(139, 92, 246, 0.3));
+.dark-mode .temperature-header h1 {
+  background: linear-gradient(135deg, #60a5fa 0%, #22d3ee 50%, #34d399 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
-.temperature-container.dark-mode .header-icon {
-  color: #A78BFA;
+.header-icon {
+  font-size: clamp(2rem, 4vw, 2.8rem) !important;
+  color: var(--primary-500);
+  filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3));
+}
+
+.dark-mode .header-icon {
+  color: var(--primary-400);
 }
 
 .temperature-header p {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 1.2rem;
   margin: 0;
   font-weight: 500;
   line-height: 1.6;
-}
-
-.temperature-container.dark-mode .temperature-header p {
-  color: #cbd5e1;
 }
 
 .export-button {
@@ -104,7 +82,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1.2rem 2.4rem;
-  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  background: var(--gradient-primary);
   color: white;
   border: none;
   border-radius: 18px;
@@ -112,7 +90,7 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.3);
+  box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
 }
@@ -134,29 +112,29 @@
 
 .export-button:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4);
+  box-shadow: var(--shadow-glow);
 }
 
 /* Enhanced Controls Section */
 .temperature-controls {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--gradient-glass);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
   border-radius: 24px;
   padding: 2.5rem;
   margin-bottom: 2.5rem;
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.1);
+  box-shadow: var(--shadow-lg);
   position: relative;
   z-index: 1;
 }
 
-.temperature-container.dark-mode .temperature-controls {
-  background: rgba(30, 41, 59, 0.95);
-  border-color: rgba(167, 139, 250, 0.3);
-  box-shadow: 0 15px 35px rgba(167, 139, 250, 0.2);
+.dark-mode .temperature-controls {
+  background: var(--gradient-glass);
+  border-color: var(--border-strong);
 }
 
 .controls-row {
@@ -175,35 +153,31 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: #1e293b;
+  color: var(--text-primary);
   font-weight: 700;
   font-size: 1.1rem;
   letter-spacing: -0.01em;
 }
 
-.temperature-container.dark-mode .control-group label {
-  color: #f8fafc;
-}
-
 .control-icon {
-  color: #8B5CF6 !important;
+  color: var(--primary-500) !important;
   font-size: 1.4rem !important;
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(59, 130, 246, 0.1);
   padding: 0.5rem;
   border-radius: 10px;
 }
 
-.temperature-container.dark-mode .control-icon {
-  color: #A78BFA !important;
-  background: rgba(167, 139, 250, 0.1);
+.dark-mode .control-icon {
+  color: var(--primary-400) !important;
+  background: rgba(96, 165, 250, 0.15);
 }
 
 .control-group select {
   padding: 1.2rem 3rem 1.2rem 1.5rem;
-  border: 2px solid rgba(139, 92, 246, 0.2);
+  border: 2px solid var(--border-color);
   border-radius: 15px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #1e293b;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -212,17 +186,17 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B5CF6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1.2rem;
 }
 
-.temperature-container.dark-mode .control-group select {
-  background: rgba(51, 65, 85, 0.9);
-  border-color: rgba(167, 139, 250, 0.3);
-  color: #f8fafc;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A78BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+.dark-mode .control-group select {
+  background: var(--bg-tertiary);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2360a5fa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1.2rem;
@@ -230,15 +204,15 @@
 
 .control-group select:focus {
   outline: none;
-  border-color: #8B5CF6;
-  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 4px var(--focus-ring);
   transform: translateY(-3px);
 }
 
 /* View Mode Toggle */
 .view-mode-selector {
   display: flex;
-  background: rgba(139, 92, 246, 0.1);
+  background: var(--hover-bg);
   padding: 0.8rem;
   border-radius: 18px;
   gap: 0.5rem;
@@ -255,7 +229,7 @@
   border: none;
   border-radius: 14px;
   background: transparent;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
@@ -268,19 +242,15 @@
 }
 
 .view-mode-btn:hover {
-  background: rgba(139, 92, 246, 0.15);
-  color: #8B5CF6;
+  background: var(--hover-bg);
+  color: var(--primary-500);
   transform: translateY(-2px);
 }
 
 .view-mode-btn.active {
-  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  background: var(--gradient-primary);
   color: white;
-  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.3);
-}
-
-.temperature-container.dark-mode .view-mode-btn:hover {
-  color: #A78BFA;
+  box-shadow: var(--shadow-glow);
 }
 
 /* Enhanced Stats Cards */
@@ -292,9 +262,10 @@
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--gradient-glass);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
   border-radius: 24px;
   padding: 2.5rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -303,9 +274,9 @@
   z-index: 1;
 }
 
-.temperature-container.dark-mode .stat-card {
-  background: rgba(30, 41, 59, 0.95);
-  border-color: rgba(167, 139, 250, 0.3);
+.dark-mode .stat-card {
+  background: var(--gradient-glass);
+  border-color: var(--border-strong);
 }
 
 .stat-card::before {
@@ -315,7 +286,7 @@
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  background: var(--gradient-primary);
   transform: scaleX(0);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -327,7 +298,7 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
   transform: scale(0);
   transition: transform 0.4s ease;
 }
@@ -342,8 +313,8 @@
 
 .stat-card:hover {
   transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 30px 60px rgba(139, 92, 246, 0.25);
-  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
+  border-color: var(--primary-400);
 }
 
 .stat-header {
@@ -355,54 +326,46 @@
 
 .stat-icon {
   font-size: 3rem !important;
-  color: #8B5CF6;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+  color: var(--primary-500);
+  background: var(--hover-bg);
   padding: 1.2rem;
   border-radius: 20px;
-  border: 2px solid rgba(139, 92, 246, 0.2);
+  border: 2px solid var(--border-color);
 }
 
-.temperature-container.dark-mode .stat-icon {
-  color: #A78BFA;
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(244, 114, 182, 0.1) 100%);
-  border-color: rgba(167, 139, 250, 0.3);
+.dark-mode .stat-icon {
+  color: var(--primary-400);
+  background: rgba(96, 165, 250, 0.15);
+  border-color: var(--border-strong);
 }
 
 .stat-title {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0;
   letter-spacing: -0.01em;
-}
-
-.temperature-container.dark-mode .stat-title {
-  color: #cbd5e1;
 }
 
 .stat-value {
   font-size: 2.8rem;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 0.8rem 0;
   line-height: 1;
   letter-spacing: -0.02em;
 }
 
-.temperature-container.dark-mode .stat-value {
-  color: #f8fafc;
-}
-
 .stat-subtitle {
   font-size: 1rem;
-  color: #8B5CF6;
+  color: var(--primary-500);
   font-weight: 700;
   margin: 0;
   letter-spacing: -0.01em;
 }
 
-.temperature-container.dark-mode .stat-subtitle {
-  color: #A78BFA;
+.dark-mode .stat-subtitle {
+  color: var(--primary-400);
 }
 
 /* Chart Container */
@@ -415,24 +378,24 @@
 }
 
 .chart-container {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--gradient-glass);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
   border-radius: 24px;
   padding: 3rem;
-  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.1);
+  box-shadow: var(--shadow-lg);
   transition: all 0.3s ease;
 }
 
-.temperature-container.dark-mode .chart-container {
-  background: rgba(30, 41, 59, 0.95);
-  border-color: rgba(167, 139, 250, 0.3);
-  box-shadow: 0 20px 40px rgba(167, 139, 250, 0.2);
+.dark-mode .chart-container {
+  background: var(--gradient-glass);
+  border-color: var(--border-strong);
 }
 
 .chart-container:hover {
   transform: translateY(-5px);
-  box-shadow: 0 30px 60px rgba(139, 92, 246, 0.15);
+  box-shadow: var(--shadow-xl);
 }
 
 .chart-header {
@@ -441,13 +404,9 @@
   justify-content: space-between;
   margin-bottom: 2.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 2px solid rgba(139, 92, 246, 0.1);
+  border-bottom: 2px solid var(--border-color);
   flex-wrap: wrap;
   gap: 1rem;
-}
-
-.temperature-container.dark-mode .chart-header {
-  border-bottom-color: rgba(167, 139, 250, 0.2);
 }
 
 .chart-title {
@@ -457,27 +416,23 @@
   margin: 0;
   font-size: 1.8rem;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 
-.temperature-container.dark-mode .chart-title {
-  color: #f8fafc;
-}
-
 .chart-icon {
-  color: #8B5CF6 !important;
+  color: var(--primary-500) !important;
   font-size: 1.8rem !important;
-  background: rgba(139, 92, 246, 0.1);
+  background: var(--hover-bg);
   padding: 0.8rem;
   border-radius: 15px;
-  border: 2px solid rgba(139, 92, 246, 0.2);
+  border: 2px solid var(--border-color);
 }
 
-.temperature-container.dark-mode .chart-icon {
-  color: #A78BFA !important;
-  background: rgba(167, 139, 250, 0.1);
-  border-color: rgba(167, 139, 250, 0.3);
+.dark-mode .chart-icon {
+  color: var(--primary-400) !important;
+  background: rgba(96, 165, 250, 0.15);
+  border-color: var(--border-strong);
 }
 
 .chart-wrapper {
@@ -494,47 +449,42 @@
 /* Temperature Map iframe Styling */
 .temperature-map-iframe {
   border-radius: 20px;
-  border: 2px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.2);
+  border: 2px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-secondary);
   backdrop-filter: blur(10px);
   height: 100%;
   min-height: 600px;
 }
 
-.temperature-container.dark-mode .temperature-map-iframe {
-  border-color: rgba(167, 139, 250, 0.4);
-  box-shadow: 0 15px 35px rgba(167, 139, 250, 0.3);
-  background: rgba(30, 41, 59, 0.95);
+.dark-mode .temperature-map-iframe {
+  border-color: var(--border-strong);
+  background: var(--bg-tertiary);
 }
 
 .temperature-map-iframe:hover {
   transform: translateY(-2px);
-  box-shadow: 0 25px 50px rgba(139, 92, 246, 0.3);
-  border-color: rgba(139, 92, 246, 0.5);
-}
-
-.temperature-container.dark-mode .temperature-map-iframe:hover {
-  box-shadow: 0 25px 50px rgba(167, 139, 250, 0.4);
-  border-color: rgba(167, 139, 250, 0.6);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-400);
 }
 
 /* Data Info Panel */
 .data-info {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
-  border-left: 5px solid #8B5CF6;
+  background: var(--gradient-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-left: 5px solid var(--primary-500);
   border-radius: 20px;
   padding: 2.5rem;
   margin-top: 2.5rem;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid var(--border-color);
 }
 
-.temperature-container.dark-mode .data-info {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(244, 114, 182, 0.1) 100%);
-  border-left-color: #A78BFA;
-  border-color: rgba(167, 139, 250, 0.3);
+.dark-mode .data-info {
+  background: var(--gradient-glass);
+  border-left-color: var(--primary-400);
+  border-color: var(--border-strong);
 }
 
 .data-info h4 {
@@ -544,12 +494,8 @@
   margin: 0 0 1.5rem 0;
   font-size: 1.4rem;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary);
   letter-spacing: -0.01em;
-}
-
-.temperature-container.dark-mode .data-info h4 {
-  color: #f8fafc;
 }
 
 .data-info-grid {
@@ -564,57 +510,44 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.2rem;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--bg-secondary);
   border-radius: 15px;
   transition: all 0.3s ease;
-  border: 1px solid rgba(139, 92, 246, 0.1);
+  border: 1px solid var(--border-color);
 }
 
-.temperature-container.dark-mode .info-item {
-  background: rgba(51, 65, 85, 0.7);
-  border-color: rgba(167, 139, 250, 0.2);
+.dark-mode .info-item {
+  background: var(--bg-tertiary);
+  border-color: var(--border-strong);
 }
 
 .info-item:hover {
   transform: translateY(-2px);
-  background: rgba(139, 92, 246, 0.05);
-}
-
-.temperature-container.dark-mode .info-item:hover {
-  background: rgba(167, 139, 250, 0.1);
+  background: var(--hover-bg);
 }
 
 .info-label {
   font-size: 1rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 600;
-}
-
-.temperature-container.dark-mode .info-label {
-  color: #cbd5e1;
 }
 
 .info-value {
   font-weight: 800;
-  color: #8B5CF6;
+  color: var(--primary-500);
   font-size: 1.1rem;
 }
 
-.temperature-container.dark-mode .info-value {
-  color: #A78BFA;
+.dark-mode .info-value {
+  color: var(--primary-400);
 }
 
 /* Loading States */
 .loading-skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-secondary) 50%, var(--bg-tertiary) 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
   border-radius: 12px;
-}
-
-.temperature-container.dark-mode .loading-skeleton {
-  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
-  background-size: 200% 100%;
 }
 
 @keyframes loading {
@@ -761,24 +694,24 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(139, 92, 246, 0.1);
+  background: var(--bg-tertiary);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  background: var(--gradient-primary);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #7C3AED 0%, #DB2777 100%);
+  background: var(--primary-600);
 }
 
 /* Focus Visible for Accessibility */
 .export-button:focus-visible,
 .view-mode-btn:focus-visible,
 .control-group select:focus-visible {
-  outline: 2px solid #8B5CF6;
+  outline: 2px solid var(--primary-500);
   outline-offset: 2px;
 }
 

@@ -1,328 +1,451 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 import {
   Send,
-  Psychology,
-  AutoAwesome,
-  TrendingUp,
-  Map as MapIcon,
-  DataUsage,
+  SmartToy,
+  Person,
   Thermostat,
   Pets,
   Warning,
-  Help,
-  Clear,
-  Refresh
+  Waves,
+  DeleteOutline,
+  Add,
+  History,
+  Chat,
+  ChevronLeft,
+  ChevronRight
 } from '@mui/icons-material';
 import './AIChatbot.css';
 
 const AIChatbot = () => {
+  const { isDarkMode } = useTheme();
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
+  const [activeChatId, setActiveChatId] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
-  // API Configuration
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-  const quickQuestions = [
-    { icon: <Thermostat />, text: "What's the ocean temperature like?", category: "temperature" },
-    { icon: <Pets />, text: "Tell me about Hilsa fish!", category: "species" },
-    { icon: <Warning />, text: "Any ocean alerts I should know?", category: "alerts" },
-    { icon: <DataUsage />, text: "What cool data do you have?", category: "datasets" },
-    { icon: <TrendingUp />, text: "How's the temperature changing?", category: "temperature" },
-    { icon: <MapIcon />, text: "How do fish migrate?", category: "migration" }
+  const quickPrompts = [
+    { icon: React.createElement(Thermostat), text: 'Current ocean temperature', color: '#f59e0b' },
+    { icon: React.createElement(Pets), text: 'Marine species info', color: '#10b981' },
+    { icon: React.createElement(Warning), text: 'Active ocean alerts', color: '#ef4444' },
+    { icon: React.createElement(Waves), text: 'Ocean current data', color: '#3b82f6' }
   ];
 
-  useEffect(() => {
-    // Initial welcome message
-    setMessages([
-      {
-        id: 1,
-        type: 'bot',
-        content: "Hey there, ocean explorer! 🌊 I'm AquaNova AI, your friendly marine science buddy! I absolutely love talking about everything ocean-related - from cool fish species to ocean temperatures and marine alerts!\n\nI've got tons of data about the Indian Ocean, and I'm super excited to share it with you. What would you like to know about our amazing oceans today? 😊",
-        timestamp: new Date(),
-        suggestions: ["What's the ocean temp like?", "Tell me about cool fish!", "Any ocean alerts?", "What data do you have?"]
+  // Initialize with a new chat
+  useEffect(function() {
+    var savedHistory = localStorage.getItem('aquanova_chat_history');
+    if (savedHistory) {
+      var parsed = JSON.parse(savedHistory);
+      setChatHistory(parsed);
+      if (parsed.length > 0) {
+        setActiveChatId(parsed[0].id);
+        // Convert timestamp strings back to Date objects
+        var messagesWithDates = parsed[0].messages.map(function(m) {
+          return { ...m, timestamp: new Date(m.timestamp) };
+        });
+        setMessages(messagesWithDates);
+        return;
       }
-    ]);
-
-    scrollToBottom();
+    }
+    startNewChat();
   }, []);
 
-  useEffect(() => {
-    scrollToBottom();
+  // Save chat history to localStorage
+  useEffect(function() {
+    if (chatHistory.length > 0) {
+      localStorage.setItem('aquanova_chat_history', JSON.stringify(chatHistory));
+    }
+  }, [chatHistory]);
+
+  // Update current chat in history when messages change
+  useEffect(function() {
+    if (activeChatId && messages.length > 1) {
+      setChatHistory(function(prev) {
+        return prev.map(function(chat) {
+          if (chat.id === activeChatId) {
+            var title = messages.find(function(m) { return m.type === 'user'; });
+            return {
+              ...chat,
+              messages: messages,
+              title: title ? title.content.substring(0, 30) + (title.content.length > 30 ? '...' : '') : 'New Chat',
+              updatedAt: new Date().toISOString()
+            };
+          }
+          return chat;
+        });
+      });
+    }
+  }, [messages, activeChatId]);
+
+  useEffect(function() {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // Focus input after typing completes
+  useEffect(function() {
+    if (!isTyping && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isTyping]);
+
+  var startNewChat = function() {
+    var newChatId = Date.now();
+    var welcomeMsg = {
+      id: 1,
+      type: 'bot',
+      content: 'Hello! I am AquaNova AI, your marine science assistant. I can help you with ocean temperatures, marine species, alerts, and oceanographic data. What would you like to know?',
+      timestamp: new Date()
+    };
+    
+    var newChat = {
+      id: newChatId,
+      title: 'New Chat',
+      messages: [welcomeMsg],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    setChatHistory(function(prev) { return [newChat, ...prev]; });
+    setActiveChatId(newChatId);
+    setMessages([welcomeMsg]);
+    
+    setTimeout(function() {
+      if (inputRef.current) inputRef.current.focus();
+    }, 100);
   };
 
-  const generateAIResponse = async (userMessage) => {
+  var loadChat = function(chatId) {
+    var chat = chatHistory.find(function(c) { return c.id === chatId; });
+    if (chat) {
+      setActiveChatId(chatId);
+      setMessages(chat.messages.map(function(m) {
+        return { ...m, timestamp: new Date(m.timestamp) };
+      }));
+    }
+    setTimeout(function() {
+      if (inputRef.current) inputRef.current.focus();
+    }, 100);
+  };
+
+  var deleteChat = function(chatId, e) {
+    e.stopPropagation();
+    setChatHistory(function(prev) {
+      var filtered = prev.filter(function(c) { return c.id !== chatId; });
+      if (chatId === activeChatId) {
+        if (filtered.length > 0) {
+          loadChat(filtered[0].id);
+        } else {
+          startNewChat();
+        }
+      }
+      return filtered;
+    });
+  };
+
+  var formatChatDate = function(dateStr) {
+    var date = new Date(dateStr);
+    var today = new Date();
+    var yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    if (date.toDateString() === today.toDateString()) return 'Today';
+    if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+    return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  };
+
+  var generateResponse = async function(userMessage) {
+    var systemPrompt = 'You are AquaNova AI, a knowledgeable marine science assistant. Provide helpful, accurate information about ocean temperatures (Arabian Sea: ~28.5C, Bay of Bengal: ~31.2C), marine species (Hilsa, Tuna, Sea Turtles, etc.), ocean alerts and environmental conditions, and oceanographic data and trends. Keep responses concise, informative, and professional. Use bullet points for lists.';
+    
     try {
-      console.log('Calling backend NVIDIA proxy...');
-
-      const systemPrompt = `You are AquaNova AI, a friendly and enthusiastic marine science buddy who loves the ocean! 🌊
-
-Talk like a supportive friend who's passionate about marine life. Use casual, conversational language while still being informative. You can use emojis occasionally to keep things fun and engaging!
-
-Your knowledge includes:
-- Ocean temperatures (Arabian Sea: ~28.5°C, Bay of Bengal: ~31.2°C)
-- Cool marine creatures (Hilsa, Tuna, Sea Turtles, and more!)
-- Marine alerts (heatwaves, cyclones, etc.)
-- Oceanographic datasets and trends
-
-Guidelines for your friendly style:
-- Be warm, approachable, and excited to help
-- Use phrases like "Hey!", "That's awesome!", "Let me tell you about...", "You're gonna love this!"
-- Share facts with enthusiasm, not like a textbook
-- Use emojis naturally (🐟🌊🐢🦈) when appropriate
-- If you don't know something, be honest but positive: "That's a great question! Let me tell you what I do know..."
-- Keep responses conversational but still informative
-- Encourage curiosity about the ocean
-
-Remember: You're a knowledgeable friend, not a formal assistant. Make learning about the ocean fun and engaging!`;
-
-      // Call backend proxy to NVIDIA API
-      const response = await fetch(`${API_URL}/api/nvidia/chat`, {
+      var messagesPayload = [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage }
+      ];
+      
+      var response = await fetch(API_URL + '/api/nvidia/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [
-            {
-              role: "system",
-              content: systemPrompt
-            },
-            {
-              role: "user",
-              content: userMessage
-            }
-          ],
-          temperature: 0.8,
-          max_tokens: 1024,
-          top_p: 0.9
+          messages: messagesPayload,
+          temperature: 0.7,
+          max_tokens: 512
         })
       });
 
-      console.log('Response status:', response.status);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('Backend API error:', response.status, errorData);
-        throw new Error(`API error: ${response.status} - ${JSON.stringify(errorData)}`);
-      }
-
-      const data = await response.json();
-      const aiMessage = data.choices[0].message.content;
-
-      return {
-        content: aiMessage,
-        suggestions: ["Current sea temperature", "Active alerts", "Available datasets", "Species information"]
-      };
+      if (!response.ok) throw new Error('API error');
+      var data = await response.json();
+      return data.choices[0].message.content;
     } catch (error) {
-      console.error("Error generating AI response:", error);
-      // Return error message to user
-      return {
-        content: "Hey there! 😅 I'm having a little trouble connecting to my AI brain right now. This could be due to network issues or API limits.\n\nPlease try again in a moment, or feel free to ask me something else about our amazing oceans! 🌊",
-        suggestions: ["Try again", "Current temperature", "Marine species", "Ocean alerts"]
-      };
+      console.error('API Error:', error);
+      return 'I am having trouble connecting right now. Please try again in a moment.';
     }
   };
 
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+  var handleSend = async function() {
+    if (!inputMessage.trim() || isTyping) return;
 
-    const userMessage = {
+    var userMsg = {
       id: Date.now(),
       type: 'user',
-      content: inputMessage,
+      content: inputMessage.trim(),
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(function(prev) { return [...prev, userMsg]; });
+    var msgToSend = inputMessage;
     setInputMessage('');
     setIsTyping(true);
 
-    // Call Google AI
-    try {
-      const aiResponse = await generateAIResponse(inputMessage);
-      const botMessage = {
+    var response = await generateResponse(msgToSend);
+    
+    setMessages(function(prev) {
+      return [...prev, {
         id: Date.now() + 1,
         type: 'bot',
-        content: aiResponse.content,
-        timestamp: new Date(),
-        suggestions: aiResponse.suggestions || []
-      };
-
-      setMessages(prev => [...prev, botMessage]);
-    } catch (error) {
-      console.error("Error in chat:", error);
-    } finally {
-      setIsTyping(false);
-    }
+        content: response,
+        timestamp: new Date()
+      }];
+    });
+    
+    setIsTyping(false);
+    setTimeout(function() {
+      if (inputRef.current) inputRef.current.focus();
+    }, 50);
   };
 
-  const handleQuickQuestion = (question) => {
-    setInputMessage(question.text);
-    setTimeout(() => handleSendMessage(), 100);
-  };
-
-  const handleSuggestionClick = (suggestion) => {
-    setInputMessage(suggestion);
-    setTimeout(() => handleSendMessage(), 100);
-  };
-
-  const clearChat = () => {
-    setMessages([
-      {
-        id: 1,
-        type: 'bot',
-        content: "🌊 Chat cleared! No worries though - I'm still here and ready to chat about all things ocean! What's on your mind? 😊",
-        timestamp: new Date(),
-        suggestions: ["Ocean temperatures?", "Cool marine species!", "Any alerts?", "Show me data!"]
-      }
-    ]);
-  };
-
-  const handleKeyPress = (e) => {
+  var handleKeyDown = function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      handleSend();
+      setTimeout(function() {
+        if (inputRef.current) inputRef.current.focus();
+      }, 50);
     }
+  };
+
+  var handleQuickPrompt = async function(text) {
+    if (isTyping) return;
+    
+    var userMsg = {
+      id: Date.now(),
+      type: 'user',
+      content: text,
+      timestamp: new Date()
+    };
+
+    setMessages(function(prev) { return [...prev, userMsg]; });
+    setIsTyping(true);
+
+    var response = await generateResponse(text);
+    
+    setMessages(function(prev) {
+      return [...prev, {
+        id: Date.now() + 1,
+        type: 'bot',
+        content: response,
+        timestamp: new Date()
+      }];
+    });
+    
+    setIsTyping(false);
+    setTimeout(function() {
+      if (inputRef.current) inputRef.current.focus();
+    }, 50);
+  };
+
+  var clearChat = function() {
+    setMessages([{
+      id: Date.now(),
+      type: 'bot',
+      content: 'Chat cleared. How can I help you today?',
+      timestamp: new Date()
+    }]);
+    setTimeout(function() {
+      if (inputRef.current) inputRef.current.focus();
+    }, 50);
+  };
+
+  var formatTime = function(date) {
+    if (!date) return '';
+    var d = date instanceof Date ? date : new Date(date);
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  var renderMessage = function(content) {
+    var lines = content.split('\n');
+    return lines.map(function(line, i) {
+      var isBullet = line.startsWith('- ') || line.startsWith('* ');
+      
+      if (isBullet) {
+        return React.createElement('div', { key: i, className: 'chat-bullet' }, line);
+      }
+      
+      return React.createElement(React.Fragment, { key: i },
+        line,
+        i < lines.length - 1 ? React.createElement('br') : null
+      );
+    });
   };
 
   return (
-    <div className="chatbot-container">
-      <div className="chatbot-header">
-        <div className="header-info">
-          <div className="ai-avatar">
-            <Psychology className="ai-icon" />
-          </div>
-          <div className="ai-details">
-            <h2>AquaNova AI - Your Ocean Buddy 🌊</h2>
-            <p className="ai-status">🟢 Online & Ready to Chat!</p>
-          </div>
-        </div>
-        <div className="header-actions">
-          <button className="header-btn" onClick={clearChat} title="Clear Chat">
-            <Clear />
+    <div className={'chatbot-page' + (isDarkMode ? ' dark' : '')}>
+      {/* Sidebar Toggle Button - Always visible */}
+      <button 
+        className={'sidebar-toggle' + (sidebarOpen ? '' : ' closed')}
+        onClick={function() { setSidebarOpen(!sidebarOpen); }}
+        title={sidebarOpen ? 'Close history' : 'Open history'}
+      >
+        {sidebarOpen ? <ChevronLeft /> : <ChevronRight />}
+      </button>
+
+      {/* Chat History Sidebar */}
+      <aside className={'chat-sidebar' + (sidebarOpen ? ' open' : '')}>
+        <div className="sidebar-header">
+          <h2><History /> Chat History</h2>
+          <button className="new-chat-btn" onClick={startNewChat} title="New Chat">
+            <Add />
           </button>
-          <button className="header-btn" onClick={() => window.location.reload()} title="Refresh">
-            <Refresh />
-          </button>
         </div>
-      </div>
-
-      <div className="chatbot-body">
-        {/* Quick Questions */}
-        <div className="quick-questions">
-          <h3>Quick Questions:</h3>
-          <div className="questions-grid">
-            {quickQuestions.map((question, index) => (
-              <button
-                key={index}
-                className="quick-question-btn"
-                onClick={() => handleQuickQuestion(question)}
-              >
-                {question.icon}
-                <span>{question.text}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Chat Messages */}
-        <div className="chat-messages">
-          {messages.map((message) => (
-            <div key={message.id} className={`message ${message.type}`}>
-              <div className="message-avatar">
-                {message.type === 'bot' ? (
-                  <AutoAwesome className="bot-icon" />
-                ) : (
-                  <div className="user-avatar">U</div>
-                )}
-              </div>
-              <div className="message-content">
-                <div className="message-bubble">
-                  <div className="message-text">
-                    {message.content.split('\n').map((line, index) => (
-                      <React.Fragment key={index}>
-                        {line.startsWith('**') && line.endsWith('**') ? (
-                          <strong>{line.slice(2, -2)}</strong>
-                        ) : line.startsWith('• ') ? (
-                          <div className="bullet-point">{line}</div>
-                        ) : (
-                          line
-                        )}
-                        {index < message.content.split('\n').length - 1 && <br />}
-                      </React.Fragment>
-                    ))}
+        <div className="chat-history-list">
+          {chatHistory.length === 0 ? (
+            <div className="no-history">No chat history yet</div>
+          ) : (
+            chatHistory.map(function(chat) {
+              return (
+                <div 
+                  key={chat.id} 
+                  className={'history-item' + (chat.id === activeChatId ? ' active' : '')}
+                  onClick={function() { loadChat(chat.id); }}
+                >
+                  <Chat className="history-icon" />
+                  <div className="history-content">
+                    <span className="history-title">{chat.title}</span>
+                    <span className="history-date">{formatChatDate(chat.updatedAt)}</span>
                   </div>
-                  <div className="message-time">
-                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </div>
+                  <button 
+                    className="history-delete" 
+                    onClick={function(e) { deleteChat(chat.id, e); }}
+                    title="Delete chat"
+                  >
+                    <DeleteOutline />
+                  </button>
                 </div>
-                {message.suggestions && message.suggestions.length > 0 && (
-                  <div className="message-suggestions">
-                    {message.suggestions.map((suggestion, index) => (
-                      <button
-                        key={index}
-                        className="suggestion-btn"
-                        onClick={() => handleSuggestionClick(suggestion)}
-                      >
-                        {suggestion}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-
-          {isTyping && (
-            <div className="message bot">
-              <div className="message-avatar">
-                <AutoAwesome className="bot-icon" />
-              </div>
-              <div className="message-content">
-                <div className="message-bubble typing">
-                  <div className="typing-indicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-              </div>
-            </div>
+              );
+            })
           )}
+        </div>
+      </aside>
 
-          <div ref={messagesEndRef} />
-        </div>
-      </div>
+      {/* Main Chat Area */}
+      <div className="chat-container">
+        <header className="chat-header">
+          <div className="chat-header-left">
+            <button className="mobile-sidebar-toggle" onClick={function() { setSidebarOpen(!sidebarOpen); }}>
+              {sidebarOpen ? <ChevronLeft /> : <ChevronRight />}
+            </button>
+            <div className="chat-avatar">
+              <SmartToy />
+            </div>
+            <div className="chat-info">
+              <h1>AquaNova AI</h1>
+              <span className="chat-status">
+                <span className="status-dot"></span>
+                Online
+              </span>
+            </div>
+          </div>
+          <div className="chat-header-right">
+            <button className="chat-action-btn" onClick={clearChat} title="Clear chat">
+              <DeleteOutline />
+            </button>
+          </div>
+        </header>
 
-      {/* Input Area */}
-      <div className="chatbot-input">
-        <div className="input-container">
-          <textarea
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ask me about sea temperatures, marine species, alerts, datasets..."
-            className="message-input"
-            rows="1"
-          />
-          <button
-            onClick={handleSendMessage}
-            disabled={!inputMessage.trim() || isTyping}
-            className="send-button"
-          >
-            <Send />
-          </button>
+        <main className="chat-main">
+          <div className="chat-messages">
+            {messages.map(function(msg) {
+              return (
+                <div key={msg.id} className={'chat-message ' + msg.type}>
+                  <div className="message-avatar">
+                    {msg.type === 'bot' ? <SmartToy /> : <Person />}
+                  </div>
+                  <div className="message-body">
+                    <div className="message-content">
+                      {renderMessage(msg.content)}
+                    </div>
+                    <span className="message-time">{formatTime(msg.timestamp)}</span>
+                  </div>
+                </div>
+              );
+            })}
+
+            {isTyping && (
+              <div className="chat-message bot">
+                <div className="message-avatar">
+                  <SmartToy />
+                </div>
+                <div className="message-body">
+                  <div className="message-content typing">
+                    <span className="typing-dot"></span>
+                    <span className="typing-dot"></span>
+                    <span className="typing-dot"></span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+        </main>
+
+        {/* Always visible recommendations */}
+        <div className="quick-prompts">
+          <span className="prompts-label">Suggestions:</span>
+          {quickPrompts.map(function(prompt, i) {
+            return (
+              <button
+                key={i}
+                className="quick-prompt-btn"
+                onClick={function() { handleQuickPrompt(prompt.text); }}
+                style={{ '--accent': prompt.color }}
+                disabled={isTyping}
+              >
+                {prompt.icon}
+                <span>{prompt.text}</span>
+              </button>
+            );
+          })}
         </div>
-        <div className="input-help">
-          <Help className="help-icon" />
-          <span>Ask me anything about the ocean! I'm here to help and have fun chatting! 🐟</span>
-        </div>
+
+        <footer className="chat-footer">
+          <div className="chat-input-wrapper">
+            <textarea
+              ref={inputRef}
+              value={inputMessage}
+              onChange={function(e) { setInputMessage(e.target.value); }}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask about ocean data..."
+              rows={1}
+              disabled={isTyping}
+              autoFocus
+            />
+            <button 
+              className="send-btn" 
+              onClick={handleSend}
+              disabled={!inputMessage.trim() || isTyping}
+            >
+              <Send />
+            </button>
+          </div>
+        </footer>
       </div>
     </div>
   );

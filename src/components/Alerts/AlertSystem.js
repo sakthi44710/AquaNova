@@ -27,7 +27,7 @@ const AlertSystem = () => {
   const [showSettings, setShowSettings] = useState(false);
 
   // Mock real-time alerts data
-  const mockAlerts = [
+  const mockAlerts = React.useMemo(() => [
     {
       id: 1,
       type: 'heatwave',
@@ -92,7 +92,7 @@ const AlertSystem = () => {
         'Report unusual marine life observations'
       ]
     }
-  ];
+  ], []);
 
   useEffect(() => {
     // Simulate real-time alert updates
@@ -112,18 +112,22 @@ const AlertSystem = () => {
         }
       );
     }
+  }, [alertSettings.locationTracking, mockAlerts]);
 
-    // Simulate new alert notifications
+  // Separate effect for notifications to avoid infinite loop
+  useEffect(() => {
+    if (!alertSettings.enableMobileNotifications) return;
+    
     const alertInterval = setInterval(() => {
       const activeAlerts = alerts.filter(alert => alert.isActive);
-      if (activeAlerts.length > 0 && alertSettings.enableMobileNotifications) {
+      if (activeAlerts.length > 0) {
         const randomAlert = activeAlerts[Math.floor(Math.random() * activeAlerts.length)];
         showNotification(randomAlert);
       }
-    }, 30000); // Check every 30 seconds
+    }, 60000); // Check every 60 seconds (reduced frequency)
 
     return () => clearInterval(alertInterval);
-  }, [alertSettings, alerts]);
+  }, [alerts, alertSettings.enableMobileNotifications]);
 
   const showNotification = (alert) => {
     const toastConfig = {

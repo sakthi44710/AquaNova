@@ -1,0 +1,23 @@
+/* Vanta Background - Separate layer that doesn't block interactions */
+.vanta-background-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none; /* Critical: allows clicks to pass through */
+}
+
+/* Ensure the canvas inside also doesn't block */
+.vanta-background-layer canvas {
+  pointer-events: none !important;
+}
+
+/* Content layer - sits on top and handles all interactions */
+.vanta-content-layer {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  pointer-events: auto; /* Ensure content receives all events */
+}

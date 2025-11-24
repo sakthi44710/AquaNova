@@ -1,35 +1,57 @@
+/* ===== Datasets Management - AquaNova Professional Theme ===== */
 .datasets-container {
-  padding: 2rem;
-  background: #f8f9fa;
-  min-height: calc(100vh - 120px);
+  padding: var(--content-padding);
+  min-height: calc(100vh - var(--nav-height));
+  transition: all var(--transition-slow);
 }
 
 .datasets-header {
   text-align: center;
   margin-bottom: 2rem;
+  animation: slideUp 0.5s ease-out;
 }
 
 .datasets-header h1 {
-  color: #2c3e50;
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 0.5rem;
 }
 
+.dark-mode .datasets-header h1 {
+  background: linear-gradient(135deg, #60a5fa 0%, #22d3ee 50%, #34d399 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 .datasets-header p {
-  color: #7f8c8d;
+  color: var(--text-secondary);
   font-size: 1.1rem;
+  font-weight: 500;
 }
 
 .datasets-controls {
-  background: white;
+  background: var(--gradient-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
   margin-bottom: 2rem;
   display: flex;
   gap: 1rem;
   align-items: center;
   flex-wrap: wrap;
+  animation: slideUp 0.5s ease-out 0.1s both;
+}
+
+.dark-mode .datasets-controls {
+  background: var(--gradient-glass);
+  border-color: var(--border-strong);
 }
 
 .search-section {
@@ -46,47 +68,68 @@
 .search-icon {
   position: absolute;
   left: 1rem;
-  color: #7f8c8d;
+  color: var(--text-muted);
   z-index: 1;
+  font-size: 1.1rem;
 }
 
 .search-input {
   width: 100%;
-  padding: 0.8rem 1rem 0.8rem 3rem;
-  border: 2px solid #ecf0f1;
-  border-radius: 8px;
+  padding: 0.9rem 1rem 0.9rem 3rem;
+  border: 2px solid var(--border-color);
+  border-radius: 14px;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all var(--transition-base);
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
 }
 
 .filter-section {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .filter-icon {
-  color: #7f8c8d;
+  color: var(--text-muted);
+  font-size: 1.1rem;
 }
 
 .category-filter {
-  padding: 0.8rem;
-  border: 2px solid #ecf0f1;
-  border-radius: 8px;
-  font-size: 1rem;
-  background: white;
+  padding: 0.85rem 1.25rem;
+  border: 2px solid var(--border-color);
+  border-radius: 14px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.category-filter:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
 }
 
 .results-count {
-  color: #7f8c8d;
-  font-weight: 500;
+  color: var(--text-secondary);
+  font-weight: 600;
   margin-left: auto;
+  padding: 0.5rem 1rem;
+  background: var(--bg-tertiary);
+  border-radius: 10px;
 }
 
 .datasets-loading {
@@ -98,10 +141,10 @@
 }
 
 .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #ecf0f1;
-  border-top: 4px solid #3498db;
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--primary-500);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -114,21 +157,42 @@
 
 .datasets-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
   gap: 1.5rem;
+  animation: slideUp 0.5s ease-out 0.2s both;
 }
 
 .dataset-card {
-  background: white;
-  border-radius: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
   padding: 1.5rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.dataset-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-ocean);
+  transform: scaleX(0);
+  transition: transform var(--transition-base);
 }
 
 .dataset-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-300);
+}
+
+.dataset-card:hover::before {
+  transform: scaleX(1);
 }
 
 .dataset-header {
@@ -136,55 +200,91 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
+  gap: 1rem;
 }
 
 .dataset-title {
-  color: #2c3e50;
-  font-size: 1.3rem;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 700;
   margin: 0;
   flex: 1;
+  line-height: 1.3;
 }
 
 .category-badge {
-  padding: 0.3rem 0.8rem;
+  padding: 0.35rem 0.9rem;
   border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
 }
 
-.category-badge.temperature { background: #ff6b6b; color: white; }
-.category-badge.currents { background: #4ecdc4; color: white; }
-.category-badge.biodiversity { background: #45b7d1; color: white; }
-.category-badge.edna { background: #96ceb4; color: white; }
-.category-badge.biogeochemistry { background: #feca57; color: white; }
+.category-badge.temperature { 
+  background: linear-gradient(135deg, #ef4444, #dc2626); 
+  color: white; 
+}
+.category-badge.currents { 
+  background: var(--gradient-ocean); 
+  color: white; 
+}
+.category-badge.biodiversity { 
+  background: linear-gradient(135deg, #14b8a6, #0d9488); 
+  color: white; 
+}
+.category-badge.edna { 
+  background: linear-gradient(135deg, #10b981, #059669); 
+  color: white; 
+}
+.category-badge.biogeochemistry { 
+  background: linear-gradient(135deg, #f59e0b, #d97706); 
+  color: white; 
+}
 
 .dataset-description {
-  color: #34495e;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .dataset-metadata {
   margin-bottom: 1rem;
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
 }
 
 .metadata-row {
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
-  color: #7f8c8d;
+  margin-bottom: 0.6rem;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
+.metadata-row:last-child {
+  margin-bottom: 0;
+}
+
 .metadata-icon {
-  margin-right: 0.5rem;
+  margin-right: 0.6rem;
   font-size: 1rem;
+  color: var(--primary-500);
 }
 
 .metadata-label {
   font-weight: 600;
   margin-right: 0.5rem;
+  color: var(--text-primary);
 }
 
 .dataset-parameters, .dataset-formats {
@@ -192,72 +292,93 @@
 }
 
 .dataset-parameters strong, .dataset-formats strong {
-  color: #2c3e50;
-  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
   display: block;
   margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .parameters-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: 0.4rem;
 }
 
 .parameter-tag, .format-tag {
-  background: #ecf0f1;
-  padding: 0.2rem 0.6rem;
-  border-radius: 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  padding: 0.25rem 0.65rem;
+  border-radius: 10px;
   font-size: 0.8rem;
-  color: #2c3e50;
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: all var(--transition-base);
+}
+
+.parameter-tag:hover {
+  background: var(--primary-100);
+  color: var(--primary-600);
+  border-color: var(--primary-300);
 }
 
 .parameter-tag.more {
-  background: #3498db;
+  background: var(--gradient-ocean);
   color: white;
+  border: none;
 }
 
 .format-tag {
-  background: #e8f5e8;
-  color: #27ae60;
-  margin-right: 0.3rem;
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success-500);
+  border-color: rgba(16, 185, 129, 0.3);
 }
 
 .dataset-actions {
   display: flex;
   gap: 0.5rem;
   margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
 }
 
 .action-btn {
-  padding: 0.6rem 1rem;
+  padding: 0.65rem 1.1rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  transition: all 0.3s ease;
+  gap: 0.4rem;
+  transition: all var(--transition-base);
 }
 
 .info-btn {
-  background: #ecf0f1;
-  color: #2c3e50;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
 .info-btn:hover {
-  background: #d5dbdb;
+  background: var(--primary-100);
+  color: var(--primary-600);
+  border-color: var(--primary-300);
+  transform: translateY(-2px);
 }
 
 .download-btn {
-  background: #27ae60;
+  background: linear-gradient(135deg, var(--success-500), #059669);
   color: white;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
 .download-btn:hover {
-  background: #229954;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
 /* Modal Styles */
@@ -267,55 +388,67 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 2rem;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .modal-content {
-  background: white;
-  border-radius: 12px;
-  max-width: 600px;
+  background: var(--bg-secondary);
+  border-radius: var(--card-radius);
+  max-width: 650px;
   width: 100%;
-  max-height: 80vh;
+  max-height: 85vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-2xl);
+  animation: slideUp 0.3s ease-out;
 }
 
 .modal-header {
   padding: 1.5rem;
-  border-bottom: 1px solid #ecf0f1;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: var(--bg-tertiary);
 }
 
 .modal-header h2 {
   margin: 0;
-  color: #2c3e50;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1.35rem;
 }
 
 .close-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  font-size: 1.25rem;
   cursor: pointer;
-  color: #7f8c8d;
-  padding: 0;
-  width: 30px;
-  height: 30px;
+  color: var(--text-secondary);
+  padding: 0.5rem;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 10px;
+  transition: all var(--transition-base);
 }
 
 .close-btn:hover {
-  background: #ecf0f1;
-  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error-500);
+  border-color: var(--error-500);
 }
 
 .modal-body {
@@ -329,65 +462,66 @@
 }
 
 .detail-section h4 {
-  color: #2c3e50;
-  margin-bottom: 0.5rem;
-  border-bottom: 2px solid #ecf0f1;
-  padding-bottom: 0.3rem;
+  color: var(--text-primary);
+  margin-bottom: 0.6rem;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.4rem;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .detail-section p {
-  color: #34495e;
-  line-height: 1.6;
+  color: var(--text-secondary);
+  line-height: 1.7;
 }
 
 .parameters-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 0.5rem;
 }
 
 .parameter-chip {
-  background: #3498db;
+  background: var(--gradient-ocean);
   color: white;
-  padding: 0.4rem 0.8rem;
+  padding: 0.5rem 1rem;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   text-align: center;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 
 .modal-actions {
   padding: 1.5rem;
-  border-top: 1px solid #ecf0f1;
+  border-top: 1px solid var(--border-color);
   text-align: center;
+  background: var(--bg-tertiary);
 }
 
 .download-btn-large {
-  background: #27ae60;
+  background: linear-gradient(135deg, var(--success-500), #059669);
   color: white;
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 8px;
+  padding: 1rem 2.5rem;
+  border-radius: 14px;
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
+  gap: 0.6rem;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
 }
 
 .download-btn-large:hover {
-  background: #229954;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .datasets-container {
-    padding: 1rem;
-  }
-  
+@media (max-width: 900px) {
   .datasets-controls {
     flex-direction: column;
     align-items: stretch;
@@ -403,48 +537,78 @@
   }
   
   .datasets-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .datasets-container {
+    padding: 1rem;
+  }
+  
+  .datasets-grid {
     grid-template-columns: 1fr;
   }
   
   .dataset-header {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
     align-items: flex-start;
   }
   
   .modal-overlay {
     padding: 1rem;
   }
+  
+  .modal-content {
+    max-height: 90vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .datasets-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .dataset-actions {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* Copernicus CLI specific styles */
 .copernicus-cli-section {
-  background-color: #f1f5f9;
-  border-radius: 8px;
-  padding: 1rem;
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  padding: 1.25rem;
   margin-top: 1rem;
-  border-left: 4px solid #3498db;
+  border-left: 4px solid var(--primary-500);
 }
 
 .cli-command-box {
-  background-color: #2d3748;
-  border-radius: 6px;
+  background: #1e293b;
+  border-radius: 10px;
   padding: 1rem;
   margin: 0.5rem 0;
   overflow-x: auto;
 }
 
 .cli-command-box pre {
-  color: #a0aec0;
-  font-family: 'Consolas', 'Monaco', monospace;
-  font-size: 14px;
+  color: #94a3b8;
+  font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+  font-size: 0.9rem;
   white-space: pre-wrap;
   word-break: break-all;
+  margin: 0;
 }
 
 .cli-help {
   font-size: 0.9rem;
-  color: #64748b;
+  color: var(--text-muted);
   margin-top: 0.5rem;
 }
 
@@ -457,7 +621,7 @@
 
 .cli-note {
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-muted);
   font-style: italic;
   text-align: center;
 }
