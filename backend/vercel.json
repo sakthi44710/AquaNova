@@ -20,6 +20,7 @@
     "DB_NAME": "@db_name",
     "JWT_SECRET": "@jwt_secret",
     "EMAIL_USER": "@email_user",
-    "EMAIL_PASSWORD": "@email_password"
+    "EMAIL_PASSWORD": "@email_password",
+    "NVIDIA_API_KEY": "@nvidia_api_key"
   }
 }
